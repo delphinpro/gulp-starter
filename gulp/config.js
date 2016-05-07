@@ -20,9 +20,9 @@ module.exports = {
         build: _build
     },
 
-    watchableTasks: ['html', 'js', 'css', 'fonts'],
+    watchableTasks: ['html', 'js', 'css', 'images', 'fonts'],
 
-    defaultTasks: ['html', 'js', 'css', 'fonts'],
+    defaultTasks: ['html', 'js', 'css', 'images', 'fonts'],
 
     css: {
         src         : 'sass',

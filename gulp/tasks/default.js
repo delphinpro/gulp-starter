@@ -10,7 +10,7 @@ var gulpSequence = require('gulp-sequence');
 var config = require('../config.js');
 
 var defaultTask = function (cb) {
-    gulpSequence('clean', config.defaultTasks, 'watch', cb);
+    gulpSequence(config.defaultTasks, 'watch', cb);
 };
 
 gulp.task('default', defaultTask);
