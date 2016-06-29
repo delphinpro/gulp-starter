@@ -8,7 +8,6 @@
 var config = require('../config');
 var gulp = require('gulp');
 var path = require('path');
-var watch = require('gulp-watch');
 
 var watchTask = function () {
     var watchableTasks = config.watchableTasks;
@@ -17,9 +16,7 @@ var watchTask = function () {
         var task = config[taskName];
         if (task) {
             var glob = path.join(config.root.src, task.src, '**/*.{' + task.extensions.join(',') + '}');
-            watch(glob, function () {
-                require('./' + taskName)();
-            })
+            gulp.watch(glob, [taskName]);
         }
     })
 };
