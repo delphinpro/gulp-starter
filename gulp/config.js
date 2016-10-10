@@ -9,9 +9,9 @@
 var pkg = require('../package.json');
 
 var _localDomain = 'domain.local';
-var _browsers = [];
-var _src = 'source/';
-var _build = 'public_html/';
+var _browsers    = [];
+var _src         = 'source/';
+var _build       = 'public_html/';
 
 module.exports = {
 
@@ -20,11 +20,11 @@ module.exports = {
         build: _build
     },
 
-    watchableTasks: ['html', 'js', 'css', 'images', 'fonts'],
+    watchableTasks: ['twig', 'js', 'scss', 'images', 'fonts'],
 
-    defaultTasks: ['html', 'js', 'css', 'images', 'fonts'],
+    defaultTasks: ['twig', 'js', 'scss', 'images', 'fonts'],
 
-    css: {
+    scss: {
         src         : 'sass',
         build       : 'design/css',
         sass        : {},
@@ -40,7 +40,7 @@ module.exports = {
         extensions: ['js', 'json']
     },
 
-    html: {
+    twig: {
         src           : 'twig',
         build         : './',
         dataFile      : 'data.json',

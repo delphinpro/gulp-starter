@@ -6,8 +6,8 @@
  */
 
 var config = require('../config');
-var gulp = require('gulp');
-var path = require('path');
+var gulp   = require('gulp');
+var path   = require('path');
 
 var watchTask = function () {
     var watchableTasks = config.watchableTasks;
@@ -22,4 +22,3 @@ var watchTask = function () {
 };
 
 gulp.task('watch', ['browserSync'], watchTask);
-module.exports = watchTask;

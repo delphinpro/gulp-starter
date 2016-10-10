@@ -1,7 +1,7 @@
 /**
- * Default gulp-task.
+ * Build gulp-task.
  *
- * @since        30.06.2015 9:33
+ * @since        09.10.2016 7:06
  * @license      Licensed under the MIT license
  */
 
@@ -9,8 +9,8 @@ var gulp         = require('gulp');
 var gulpSequence = require('gulp-sequence');
 var config       = require('../config.js');
 
-var defaultTask = function (cb) {
-    gulpSequence(config.defaultTasks, 'watch', cb);
+var buildTask = function (cb) {
+    gulpSequence(config.defaultTasks, cb);
 };
 
-gulp.task('default', defaultTask);
+gulp.task('build', buildTask);

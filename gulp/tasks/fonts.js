@@ -9,12 +9,12 @@ var config = require('../config');
 if (!config.fonts) return;
 
 var browserSync = require('browser-sync');
-var changed = require('gulp-changed');
-var gulp = require('gulp');
-var path = require('path');
+var changed     = require('gulp-changed');
+var gulp        = require('gulp');
+var path        = require('path');
 
 var paths = {
-    src : path.join(config.root.src, config.fonts.src, '/**/*.{' + config.fonts.extensions + '}'),
+    src  : path.join(config.root.src, config.fonts.src, '/**/*.{' + config.fonts.extensions + '}'),
     build: path.join(config.root.build, config.fonts.build)
 };
 
@@ -26,4 +26,3 @@ var fontsTask = function () {
 };
 
 gulp.task('fonts', fontsTask);
-module.exports = fontsTask;
