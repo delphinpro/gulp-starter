@@ -8,12 +8,14 @@
 
 var pkg = require('../package.json');
 
+var _serverPort  = 3000;
+var _useProxy    = true;
 var _localDomain = 'domain.local';
 var _browsers    = [];
 var _src         = 'source/';
 var _build       = 'public_html/';
 
-module.exports = {
+var config = {
 
     root: {
         src  : _src,
@@ -65,9 +67,25 @@ module.exports = {
         browser  : _browsers,
         notify   : false,
         startPath: '/',
-        proxy    : _localDomain
+        proxy    : _localDomain,
+        port     : _serverPort,
+        ghostMode: {
+            clicks: true,
+            forms : true,
+            scroll: false
+        }
     },
 
     docHeader: '/*! ' + pkg.name + ' v' + pkg.version + ' */\n'
 
 };
+
+if (!_useProxy) {
+    config.browserSync.proxy  = null;
+    config.browserSync.server = {
+        baseDir  : _build,
+        directory: true
+    };
+}
+
+module.exports = config;
