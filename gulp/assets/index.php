@@ -41,6 +41,8 @@ function getPluralForm($n, $forms)
             margin: 0;
             font-weight: 400;
         }
+        h1 small {
+            font-size: 0.6em;}
 
         h2 {
             margin: 0;
@@ -100,6 +102,8 @@ function getPluralForm($n, $forms)
             color: #26a69a;
         }
 
+        #files > li > .link {
+            white-space: nowrap; }
         #files > li > .title {
             display: block;
             color: #777;
@@ -189,7 +193,7 @@ function getPluralForm($n, $forms)
 
 <div class="header">
     <div class="container">
-        <h1>Список файлов</h1>
+        <h1>Список файлов <small><?=$_SERVER['HTTP_HOST']?></small></h1>
     </div>
 </div>
 
@@ -220,11 +224,11 @@ function getPluralForm($n, $forms)
                     <span class="check-it">
                     <span class="check-it-in">
                         <a class="w3c"
-                           href="https://validator.w3.org/nu/?showoutline=yes&doc=<?= urlencode($_SERVER['REQUEST_SCHEME']) ?>://<?= $_SERVER['HTTP_HOST'] ?>/<?= $file ?>"
+                           href="https://validator.w3.org/nu/?showoutline=yes&doc=http://<?= $_SERVER['HTTP_HOST'] ?>/<?= $file ?>"
                            target="_blank">check it</a>
 
                         <a class="psi"
-                           href="https://developers.google.com/speed/pagespeed/insights/?hl=ru&url=<?= urlencode($_SERVER['REQUEST_SCHEME']) ?>://<?= $_SERVER['HTTP_HOST'] ?>/<?= $file ?>"
+                           href="https://developers.google.com/speed/pagespeed/insights/?hl=ru&url=http://<?= $_SERVER['HTTP_HOST'] ?>/<?= $file ?>"
                            target="_blank">check it</a>
                     </span>
                     </span>
@@ -238,5 +242,7 @@ function getPluralForm($n, $forms)
     </div>
 </div>
 
+<? //echo '<pre>';?>
+<? //print_r($_SERVER); ?>
 </body>
 </html>
