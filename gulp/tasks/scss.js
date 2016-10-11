@@ -32,7 +32,6 @@ var scssTask = function () {
         .on('error', handleErrors)
         .pipe(autoprefixer(config.scss.autoprefixer))
         .pipe(_if(global.production, cssnano({autoprefixer: false})))
-        .pipe(_if(!global.production, sourceMaps.write()))
         .pipe(_if(!global.production, sourceMaps.write('.')))
         .pipe(_if(global.production, rename({suffix: '.min'})))
         .pipe(gulp.dest(paths.build))
