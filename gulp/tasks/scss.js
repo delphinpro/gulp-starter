@@ -19,6 +19,7 @@ var autoprefixer = require('gulp-autoprefixer');
 var path         = require('path');
 var cssnano      = require('gulp-cssnano');
 var rename       = require('gulp-rename');
+var resolver     = require('../lib/gulp-sass-image-resolver');
 
 var paths = {
     src  : path.join(config.root.src, config.scss.src, '/**/*.{' + config.scss.extensions + '}'),
@@ -34,6 +35,7 @@ var scssTask = function () {
         .pipe(_if(global.production, cssnano({autoprefixer: false})))
         .pipe(_if(!global.production, sourceMaps.write('.')))
         .pipe(_if(global.production, rename({suffix: '.min'})))
+        .pipe(resolver(config.scss.resolver))
         .pipe(gulp.dest(paths.build))
         .pipe(browserSync.stream())
 };

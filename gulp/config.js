@@ -33,7 +33,11 @@ var config = {
         autoprefixer: {
             browsers: ['last 5 versions', 'ie 8-9']
         },
-        extensions  : ['sass', 'scss', 'css']
+        extensions  : ['sass', 'scss', 'css'],
+        resolver: {
+            source     : '/design/images/',
+            replacement: '../images/'
+        }
     },
 
     js: {
