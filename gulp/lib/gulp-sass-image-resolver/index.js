@@ -38,7 +38,7 @@ module.exports = function(options) {
                         var result = found.replace(options.source, options.replacement);
                         content = content.replace(found, result);
                     }
-                    
+
                     file.contents = new Buffer(content);
                 }
             }
