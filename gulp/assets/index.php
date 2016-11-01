@@ -142,6 +142,11 @@ function getPluralForm($n, $forms)
         .list-footer {
             color: #cccccc;
         }
+        .counter {
+            display: none;
+            text-align: right;
+            color: #cccccc;
+        }
 
         @media (min-width: 480px) {
             #files > li > .check-it {
@@ -168,6 +173,7 @@ function getPluralForm($n, $forms)
                 display: table-row;
             }
 
+            #files > li > .counter,
             #files > li > .link,
             #files > li > .title,
             #files > li > .check-it {
@@ -177,6 +183,9 @@ function getPluralForm($n, $forms)
                 position: static;
             }
 
+            #files > li > .counter {
+                padding-right: 0;
+            }
             #files > li > .title {
                 width: 60%;
             }
@@ -207,6 +216,7 @@ function getPluralForm($n, $forms)
 
         <ol id="files">
             <?
+            $counter = 1;
             foreach ($files as $file) {
                 $content = file_get_contents($file);
                 $title = '';
@@ -216,6 +226,7 @@ function getPluralForm($n, $forms)
                 $file = basename($file);
                 ?>
                 <li>
+                    <span class="counter"><?= $counter++ ?></span>
                     <a class="link"
                        href="<?= $file ?>"><?= $file ?></a>
 
