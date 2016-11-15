@@ -1,5 +1,4 @@
 /**
- * MotorSport Gaming
  * @since       12.10.2016 11:19
  * @author      delphinpro <delphinpro@gmail.com>
  * @copyright   copyright © 2016 delphinpro
