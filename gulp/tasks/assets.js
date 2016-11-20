@@ -5,9 +5,10 @@
  * @license      Licensed under the MIT license
  */
 
-var gulp   = require('gulp');
-var path   = require('path');
-var config = require('../config.js');
+var gulp    = require('gulp');
+var changed = require('gulp-changed');
+var path    = require('path');
+var config  = require('../config.js');
 
 var paths = {
     index: path.join('gulp/assets/', '**/*'),
@@ -16,6 +17,7 @@ var paths = {
 
 var assetsTask = function (cb) {
     return gulp.src([paths.index])
+        .pipe(changed(paths.build))
         .pipe(gulp.dest(paths.build))
 };
 

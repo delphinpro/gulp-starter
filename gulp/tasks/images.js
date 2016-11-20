@@ -9,8 +9,8 @@ var config = require('../config');
 if (!config.images) return;
 
 var browserSync    = require('browser-sync');
-var changed        = require('gulp-changed');
 var gulp           = require('gulp');
+var changed        = require('gulp-changed');
 var imagesOptimize = require('gulp-imagemin');
 var path           = require('path');
 

@@ -4,8 +4,9 @@
   "description": "Configuration template",
   "main": "gulpfile.js",
   "scripts": {
-    "start": "gulp",
-    "production": "gulp production"
+    "start": "bower i &&gulp",
+    "build": "bower i &&gulp production",
+    "clean": "gulp clean"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "*",
     "gulp-changed": "^1.3.2",
+    "gulp-changed-in-place": "^2.0.3",
     "gulp-cssnano": "^2.1.2",
     "gulp-data": "^1.2.1",
     "gulp-if": "^2.0.1",

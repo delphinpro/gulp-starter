@@ -2,18 +2,19 @@
 
 ###Begin
     git clone https://delphinpro/gulp-starter .
+    npm install -g bower 
     npm install
 
 ###Commands:
 
 __Development__
 
-```gulp```
+    npm start
 
 __Build production__
 
-```gulp production```
+    npm build
 
 __Clean__
 
-```gulp clean```
+    npm clean

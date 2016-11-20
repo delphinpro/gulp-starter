@@ -9,12 +9,13 @@ var config = require('../config');
 if (!config.twig) return;
 
 var browserSync  = require('browser-sync');
-var data         = require('gulp-data');
 var gulp         = require('gulp');
+var data         = require('gulp-data');
 var twig         = require('gulp-twig');
-var handleErrors = require('../lib/handleErrors');
+var changed      = require('gulp-changed-in-place');
 var path         = require('path');
 var fs           = require('fs');
+var handleErrors = require('../lib/handleErrors');
 var functions    = require('../functions');
 
 var exclude    = path.normalize('!**/{' + config.twig.excludeFolders.join(',') + '}/**');
@@ -45,6 +46,7 @@ var twigTask = function () {
             functions: functions
         }))
         .on('error', handleErrors)
+        .pipe(changed({firstPass: true}))
         .pipe(gulp.dest(paths.build))
         .pipe(browserSync.stream());
 

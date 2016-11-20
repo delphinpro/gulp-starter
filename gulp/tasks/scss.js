@@ -9,16 +9,17 @@
 var config = require('../config');
 if (!config.scss) return;
 
+var browserSync  = require('browser-sync');
 var gulp         = require('gulp');
 var _if          = require('gulp-if');
-var browserSync  = require('browser-sync');
 var sass         = require('gulp-sass');
 var sourceMaps   = require('gulp-sourcemaps');
-var handleErrors = require('../lib/handleErrors');
 var autoprefixer = require('gulp-autoprefixer');
-var path         = require('path');
 var cssnano      = require('gulp-cssnano');
 var rename       = require('gulp-rename');
+var changed      = require('gulp-changed-in-place');
+var path         = require('path');
+var handleErrors = require('../lib/handleErrors');
 var resolver     = require('../lib/gulp-sass-image-resolver');
 
 var paths = {
@@ -31,6 +32,7 @@ var scssTask = function () {
         .pipe(_if(!global.production, sourceMaps.init()))
         .pipe(sass(config.scss.sass))
         .on('error', handleErrors)
+        .pipe(changed({firstPass: true}))
         .pipe(autoprefixer(config.scss.autoprefixer))
         .pipe(_if(global.production, cssnano({autoprefixer: false})))
         .pipe(_if(!global.production, sourceMaps.write('.')))
