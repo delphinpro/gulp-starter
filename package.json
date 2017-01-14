@@ -4,8 +4,9 @@
   "description": "Configuration template",
   "main": "gulpfile.js",
   "scripts": {
-    "start": "bower i &&gulp",
-    "build": "bower i &&gulp production",
+    "start": "gulp",
+    "build": "gulp production",
+    "bower": "bower install",
     "clean": "gulp clean"
   },
   "repository": {

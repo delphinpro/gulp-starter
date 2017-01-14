@@ -9,8 +9,8 @@
 var pkg = require('../package.json');
 
 var _serverPort  = 3000;
-var _useProxy    = true;
 var _localDomain = 'domain.local';
+var _useProxy    = false;
 var _browsers    = [];
 var _src         = 'source/';
 var _build       = 'public_html/';

@@ -21,4 +21,4 @@ var assetsTask = function (cb) {
         .pipe(gulp.dest(paths.build))
 };
 
-gulp.task('assets', assetsTask);
+gulp.task('assets', ['scss', 'js'], assetsTask);
