@@ -31,14 +31,14 @@ $screen-xl-min: map_get($grid-breakpoints, xl) !default;
   $grid-gutter-width-base: $grid-gutter-width;
   $grid-breakpoints: (
           xs: 0,
-          sm: 768px,
-          lg: 992px,
-          xl: 1200px
+          sm: $screen-sm-min,
+          md: $screen-md-min,
+          lg: $screen-lg-min
   );
   $container-max-widths: (
-          sm: 720px + $grid-gutter-width-base,
-          md: 940px + $grid-gutter-width-base,
-          lg: 1140px + $grid-gutter-width-base
+          sm: $container-sm,
+          md: $container-md,
+          lg: $container-lg
   );
 }
 
@@ -60,8 +60,7 @@ $grid-gutter-widths: (
           xs: $grid-gutter-width-base,
           sm: $grid-gutter-width-base,
           md: $grid-gutter-width-base,
-          lg: $grid-gutter-width-base,
-          xl: $grid-gutter-width-base
+          lg: $grid-gutter-width-base
   );
 }
 
