@@ -22,11 +22,29 @@ foreach ($rii as $file) {
             $time = $fileTime;
         }
         if ($rii->getDepth() === 0 && $file->getExtension() === 'html') {
-            $files[] = $file;
+            $basename = $file->getBasename($file);
+            $content = file_get_contents($file->getRealPath());
+            $title = $basename;
+            if (preg_match('#<title>(.*)</title>#', $content, $result)) {
+                $title = htmlspecialchars($result[1]);
+            }
+
+            $files[] = array(
+                'basename' => $basename,
+                'title' => $title,
+                'w3c_link' => 'https://validator.w3.org/nu/?showoutline=yes&doc=http://' . $_SERVER['HTTP_HOST'] . '/' . $basename,
+                'pis_link' => 'https://developers.google.com/speed/pagespeed/insights/?hl=ru&url=http://' . $_SERVER['HTTP_HOST'] . '/' . $basename,
+            );
         }
 //        echo str_repeat('---', $rii->getDepth()) . $rii->getDepth() . ' ' . $file . ' > ' . $file->getMTime() . '<br>';
     }
 }
+
+usort($files, function ($a, $b) {
+    $key = 'basename';
+    if ($a[$key] == $b[$key]) return 0;
+    return $a[$key] > $b[$key] ? 1 : -1;
+});
 
 ?>
 <head>
@@ -56,33 +74,18 @@ foreach ($rii as $file) {
             <div class="index-page__col">
                 <div class="index-page__block">
                     <h2>Страницы</h2>
-                    <?
-                    sort($files); ?>
+                    <? $counter = 1; ?>
 
                     <ol id="files">
-                        <?
-                        $counter = 1;
-                        foreach ($files as $file) {
-                            $content = file_get_contents($file);
-                            $title = '';
-                            if (preg_match('#<title>(.*)</title>#', $content, $result)) {
-                                $title = htmlspecialchars($result[1]);
-                            }
-                            $file = basename($file);
-                            ?>
+                        <? foreach ($files as $file) { ?>
                             <li>
                                 <span class="counter"><?= $counter++ ?></span>
-                                <a class="link" href="<?= $file ?>"><?= $file ?></a>
-                                <span class="title"><?= $title ?></span>
+                                <a class="link" href="<?= $file['basename'] ?>"><?= $file['basename'] ?></a>
+                                <span class="title"><?= $file['title'] ?></span>
                                 <span class="check-it">
                                     <span class="check-it-in">
-                                        <a class="w3c"
-                                           href="https://validator.w3.org/nu/?showoutline=yes&doc=http://<?= $_SERVER['HTTP_HOST'] ?>/<?= $file ?>"
-                                           target="_blank">check it</a>
-
-                                        <a class="psi"
-                                           href="https://developers.google.com/speed/pagespeed/insights/?hl=ru&url=http://<?= $_SERVER['HTTP_HOST'] ?>/<?= $file ?>"
-                                           target="_blank">check it</a>
+                                        <a class="w3c" href="<?= $file['w3c_link'] ?>" target="_blank">check it</a>
+                                        <a class="psi" href="<?= $file['pis_link'] ?>" target="_blank">check it</a>
                                     </span>
                                 </span>
                             </li>
