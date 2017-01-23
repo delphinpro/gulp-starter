@@ -9,12 +9,12 @@
 
 __Development__
 
-    npm start
+    npm run start
 
 __Build production__
 
-    npm build
+    npm run build
 
 __Clean__
 
-    npm clean
+    npm run clean
