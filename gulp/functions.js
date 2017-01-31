@@ -68,7 +68,26 @@ function radioButton(title, name, value, checked, disabled, id) {
         '</label>';
 }
 
+function pixelGlass(points) {
+    if (typeof  points !== 'object') {
+        console.warn('Invalid param type for pixelGlass()');
+        return '';
+    }
+
+    let bp, s = `<!-- Pixel Glass. Удалить эти стили. Нужны только для верстальщика! -->\n<style>\n`;
+
+    for (bp of Object.keys(points)) {
+        if (bp == '_keys') continue;
+        s += `@media(min-width:${bp}){html{background:url("${points[bp]}") no-repeat 50% 0;}}\n`;
+    }
+
+    s += `</style><!-- // Pixel Glass -->\n`;
+
+    return s;
+}
+
 module.exports = [
+    {name: "pixelGlass", func: pixelGlass},
     {name: "checkbox", func: checkbox},
     {name: "radio", func: radioButton},
     {name: "uniqueId", func: uniqueId}
