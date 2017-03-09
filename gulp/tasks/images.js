@@ -22,7 +22,14 @@ var paths = {
 var imagesTask = function () {
     return gulp.src([paths.src])
         .pipe(changed(paths.build))
-        .pipe(imagesOptimize())
+        .pipe(imagesOptimize([
+            imagesOptimize.gifsicle(),// default
+            imagesOptimize.jpegtran({
+                progressive: true
+            }),
+            imagesOptimize.optipng(),// default
+            imagesOptimize.svgo()// default
+        ]))
         .pipe(gulp.dest(paths.build))
         .pipe(browserSync.stream())
 };
