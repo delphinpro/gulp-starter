@@ -43,7 +43,9 @@ let config = {
     js: {
         src       : 'js',
         build     : 'design/js',
-        extensions: ['js', 'json']
+        order     : [],
+        filename  : 'build.js',
+        extensions: ['js']
     },
 
     twig: {
