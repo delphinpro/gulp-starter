@@ -6,28 +6,28 @@
  */
 
 
-var config = require('../config');
+const config = require('../config');
 if (!config.scss) return;
 
-var browserSync  = require('browser-sync');
-var gulp         = require('gulp');
-var _if          = require('gulp-if');
-var sass         = require('gulp-sass');
-var sourceMaps   = require('gulp-sourcemaps');
-var autoprefixer = require('gulp-autoprefixer');
-var cssnano      = require('gulp-cssnano');
-var rename       = require('gulp-rename');
-var changed      = require('gulp-changed-in-place');
-var path         = require('path');
-var handleErrors = require('../lib/handleErrors');
-var resolver     = require('../lib/gulp-sass-image-resolver');
+const path         = require('path');
+const browserSync  = require('browser-sync');
+const gulp         = require('gulp');
+const _if          = require('gulp-if');
+const sass         = require('gulp-sass');
+const rename       = require('gulp-rename');
+const cssnano      = require('gulp-cssnano');
+const sourceMaps   = require('gulp-sourcemaps');
+const autoprefixer = require('gulp-autoprefixer');
+const changed      = require('gulp-changed-in-place');
+const handleErrors = require('../lib/handleErrors');
+const resolver     = require('../lib/gulp-sass-image-resolver');
 
-var paths = {
+const paths = {
     src  : path.join(config.root.src, config.scss.src, '/**/*.{' + config.scss.extensions + '}'),
     build: path.join(config.root.build, config.scss.build)
 };
 
-var scssTask = function () {
+gulp.task('scss', function () {
     return gulp.src(paths.src)
         .pipe(_if(!global.production, sourceMaps.init()))
         .pipe(sass(config.scss.sass))
@@ -40,6 +40,4 @@ var scssTask = function () {
         .pipe(resolver(config.scss.resolver))
         .pipe(gulp.dest(paths.build))
         .pipe(browserSync.stream())
-};
-
-gulp.task('scss', scssTask);
+});

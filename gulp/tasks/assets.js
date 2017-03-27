@@ -5,20 +5,18 @@
  * @license      Licensed under the MIT license
  */
 
-var gulp    = require('gulp');
-var changed = require('gulp-changed');
-var path    = require('path');
-var config  = require('../config.js');
+const gulp    = require('gulp');
+const changed = require('gulp-changed');
+const path    = require('path');
+const config  = require('../config.js');
 
-var paths = {
+const paths = {
     index: path.join('gulp/assets/', '**/*'),
     build: path.join(config.root.build)
 };
 
-var assetsTask = function (cb) {
+gulp.task('assets', ['scss', 'js'], function (cb) {
     return gulp.src([paths.index])
         .pipe(changed(paths.build))
         .pipe(gulp.dest(paths.build))
-};
-
-gulp.task('assets', ['scss', 'js'], assetsTask);
+});

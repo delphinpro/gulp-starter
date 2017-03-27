@@ -5,14 +5,14 @@
  * @license      Licensed under the MIT license
  */
 
-var gulp   = require('gulp');
-var del    = require('del');
-var config = require('../config');
+const config = require('../config');
+if (!config.root.build) return;
 
-var cleanTask = function (cb) {
+const gulp = require('gulp');
+const del  = require('del');
+
+gulp.task('clean', function (cb) {
     del([config.root.build]).then(function (paths) {
         cb()
     })
-};
-
-gulp.task('clean', cleanTask);
+});

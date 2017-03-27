@@ -9,9 +9,9 @@
 
 // take from php.js library
 function uniqueId(prefix, moreEntropy) {
-    var retId;
-    moreEntropy    = moreEntropy ? true : false;
-    var formatSeed = function (seed, reqWidth) {
+    let retId;
+    moreEntropy    = !!moreEntropy;
+    const formatSeed = function (seed, reqWidth) {
         seed = parseInt(seed, 10).toString(16); // to hex str
         if (reqWidth < seed.length) {
             // so long we split
@@ -44,30 +44,6 @@ function uniqueId(prefix, moreEntropy) {
     return retId;
 }
 
-function checkbox(title, name, value, checked, disabled, id) {
-    checked         = checked ? ' checked' : '';
-    disabled        = disabled ? ' disabled' : '';
-    id              = id || uniqueId('id-');
-    var cssDisabled = disabled ? ' checkbox--disabled' : '';
-    return '<label class="checkbox' + cssDisabled + '" for="' + id + '">\n' +
-        '<input class="checkbox__element" id="' + id + '" type="checkbox" name="' + name + '" value="' + value + '"' + checked + disabled + '>\n' +
-        '<span class="checkbox__presentation" role="presentation"></span>\n' +
-        '<span class="checkbox__label">' + title + '</span>\n' +
-        '</label>';
-}
-
-function radioButton(title, name, value, checked, disabled, id) {
-    checked         = checked ? ' checked' : '';
-    disabled        = disabled ? ' disabled' : '';
-    id              = id || uniqueId('id-');
-    var cssDisabled = disabled ? ' radio--disabled' : '';
-    return '<label class="radio' + cssDisabled + '" for="' + id + '">\n' +
-        '<input class="radio__element" id="' + id + '" type="radio" name="' + name + '" value="' + value + '"' + checked + disabled + '>\n' +
-        '<span class="radio__presentation" role="presentation"></span>\n' +
-        '<span class="radio__label">' + title + '</span>\n' +
-        '</label>';
-}
-
 function pixelGlass(points) {
     if (typeof  points !== 'object') {
         console.warn('Invalid param type for pixelGlass()');
@@ -77,7 +53,7 @@ function pixelGlass(points) {
     let bp, s = `<!-- Pixel Glass. Удалить эти стили. Нужны только для верстальщика! -->\n<style>\n`;
 
     for (bp of Object.keys(points)) {
-        if (bp == '_keys') continue;
+        if (bp === '_keys') continue;
         s += `@media(min-width:${bp}){html{background:url("${points[bp]}") no-repeat 50% 0;}}\n`;
     }
 
@@ -88,7 +64,5 @@ function pixelGlass(points) {
 
 module.exports = [
     {name: "pixelGlass", func: pixelGlass},
-    {name: "checkbox", func: checkbox},
-    {name: "radio", func: radioButton},
     {name: "uniqueId", func: uniqueId}
 ];

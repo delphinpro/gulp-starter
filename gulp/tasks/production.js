@@ -6,14 +6,15 @@
  * @copyright   copyright © 2016 delphinpro
  * @license     licensed under the MIT license
  */
-var gulp         = require('gulp');
-var gulpSequence = require('gulp-sequence');
-var config       = require('../config.js');
+
+const config       = require('../config.js');
+if (!config.defaultTasks) return;
+
+const gulp         = require('gulp');
+const gulpSequence = require('gulp-sequence');
 
 
-var productionTask = function (cb) {
+gulp.task('production', function (cb) {
     global.production = true;
     gulpSequence(config.defaultTasks, cb);
-};
-
-gulp.task('production', productionTask);
+});

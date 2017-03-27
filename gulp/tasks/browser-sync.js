@@ -5,14 +5,13 @@
  * @license      Licensed under the MIT license
  */
 
+const config = require('../config');
+if (!config.browserSync) return;
 if (global.production) return;
 
-var browserSync = require('browser-sync');
-var gulp        = require('gulp');
-var config      = require('../config');
+const browserSync = require('browser-sync');
+const gulp        = require('gulp');
 
-var browserSyncTask = function () {
+gulp.task('browserSync', function () {
     browserSync.init(config.browserSync);
-};
-
-gulp.task('browserSync', browserSyncTask);
+});

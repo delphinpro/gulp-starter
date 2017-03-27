@@ -8,11 +8,11 @@
 "use strict";
 
 const gulpUtil = require('gulp-util');
-const through = require('through2');
+const through  = require('through2');
 
-var PLUGIN_NAME = 'gulp-sass-image-resolver';
+const PLUGIN_NAME = 'gulp-sass-image-resolver';
 
-module.exports = function(options) {
+module.exports = function (options) {
     return through.obj(function (file, enc, cb) {
         if (file.isNull()) {
             cb(null, file);
@@ -25,17 +25,17 @@ module.exports = function(options) {
         }
 
         try {
-            var content = file.contents.toString();
+            let content = file.contents.toString();
 
             if (/\.css$/.exec(file.path) !== null) {
                 if (/url\("(.+?)"\)/.exec(content) !== null) {
-                    var match;
-                    var pattern = /url\("(.+?)"\)/g;
+                    let match;
+                    const pattern = /url\("(.+?)"\)/g;
 
                     while ((match = pattern.exec(content)) !== null) {
-                        var found = match[1];
-                        var result = found.replace(options.source, options.replacement);
-                        content = content.replace(found, result);
+                        let found  = match[1];
+                        let result = found.replace(options.source, options.replacement);
+                        content    = content.replace(found, result);
                     }
 
                     file.contents = new Buffer(content);

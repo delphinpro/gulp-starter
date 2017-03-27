@@ -5,24 +5,25 @@
  * @license      Licensed under the MIT license
  */
 
-var config = require('../config');
+const config = require('../config');
 if (!config.twig) return;
 
-var browserSync  = require('browser-sync');
-var gulp         = require('gulp');
-var data         = require('gulp-data');
-var twig         = require('gulp-twig');
-var changed      = require('gulp-changed-in-place');
-var path         = require('path');
-var fs           = require('fs');
-var handleErrors = require('../lib/handleErrors');
-var functions    = require('../functions');
+const fs           = require('fs');
+const path         = require('path');
+const browserSync  = require('browser-sync');
+const gulp         = require('gulp');
+const data         = require('gulp-data');
+const twig         = require('gulp-twig');
+const changed      = require('gulp-changed-in-place');
+const handleErrors = require('../lib/handleErrors');
+const functions    = require('../functions');
 
-var exclude    = path.normalize('!**/{' + config.twig.excludeFolders.join(',') + '}/**');
-var extensions = config.twig.extensions.filter(function (item) {
+let exclude    = path.normalize('!**/{' + config.twig.excludeFolders.join(',') + '}/**');
+let extensions = config.twig.extensions.filter(function (item) {
     return item !== 'json';
 });
-var paths      = {
+
+const paths = {
     src  : [
         path.join(config.root.src, config.twig.src, '/**/*.{' + extensions + '}'),
         exclude
@@ -30,18 +31,16 @@ var paths      = {
     build: path.join(config.root.build, config.twig.build)
 };
 
-var getData = function (file) {
-    var dataPath = path.resolve(config.root.src, config.twig.src, config.twig.dataFile);
+function getData(file) {
+    let dataPath = path.resolve(config.root.src, config.twig.src, config.twig.dataFile);
     return JSON.parse(fs.readFileSync(dataPath, 'utf8'));
-};
+}
 
-var twigTask = function () {
-
+gulp.task('twig', function () {
     return gulp.src(paths.src)
         .pipe(data(getData))
         .on('error', handleErrors)
         .pipe(twig({
-            //base     : __dirname + '/../../',
             base     : [path.join(config.root.src, config.twig.src)],
             functions: functions
         }))
@@ -49,7 +48,4 @@ var twigTask = function () {
         .pipe(changed({firstPass: true}))
         .pipe(gulp.dest(paths.build))
         .pipe(browserSync.stream());
-
-};
-
-gulp.task('twig', twigTask);
+});

@@ -5,12 +5,12 @@
  * @license      Licensed under the MIT license
  */
 
-var gulp         = require('gulp');
-var gulpSequence = require('gulp-sequence');
-var config       = require('../config.js');
+const config = require('../config.js');
+if (!config.defaultTasks) return;
 
-var defaultTask = function (cb) {
+const gulp         = require('gulp');
+const gulpSequence = require('gulp-sequence');
+
+gulp.task('default', function (cb) {
     gulpSequence(config.defaultTasks, 'watch', cb);
-};
-
-gulp.task('default', defaultTask);
+});

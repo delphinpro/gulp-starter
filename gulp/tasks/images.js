@@ -5,21 +5,21 @@
  * @license      Licensed under the MIT license
  */
 
-var config = require('../config');
+const config = require('../config');
 if (!config.images) return;
 
-var browserSync    = require('browser-sync');
-var gulp           = require('gulp');
-var changed        = require('gulp-changed');
-var imagesOptimize = require('gulp-imagemin');
-var path           = require('path');
+const path           = require('path');
+const browserSync    = require('browser-sync');
+const gulp           = require('gulp');
+const changed        = require('gulp-changed');
+const imagesOptimize = require('gulp-imagemin');
 
-var paths = {
+const paths = {
     src  : path.join(config.root.src, config.images.src, '/**/*.{' + config.images.extensions + '}'),
     build: path.join(config.root.build, config.images.build)
 };
 
-var imagesTask = function () {
+gulp.task('images', function () {
     return gulp.src([paths.src])
         .pipe(changed(paths.build))
         .pipe(imagesOptimize([
@@ -32,6 +32,4 @@ var imagesTask = function () {
         ]))
         .pipe(gulp.dest(paths.build))
         .pipe(browserSync.stream())
-};
-
-gulp.task('images', imagesTask);
+});

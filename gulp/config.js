@@ -6,16 +6,16 @@
  * @license      Licensed under the MIT license
  */
 
-var pkg = require('../package.json');
+const pkg = require('../package.json');
 
-var _serverPort  = 3000;
-var _localDomain = 'domain.local';
-var _useProxy    = false;
-var _browsers    = [];
-var _src         = 'source/';
-var _build       = 'public_html/';
+const _serverPort  = 3000;
+const _useProxy    = false;
+const _localDomain = '';
+const _browsers    = [];
+const _src         = 'source/';
+const _build       = 'public_html/';
 
-var config = {
+let config = {
 
     root: {
         src  : _src,
@@ -34,7 +34,7 @@ var config = {
             browsers: ['last 5 versions', 'ie 8-9']
         },
         extensions  : ['sass', 'scss', 'css'],
-        resolver: {
+        resolver    : {
             source     : '/design/images/',
             replacement: '../images/'
         }

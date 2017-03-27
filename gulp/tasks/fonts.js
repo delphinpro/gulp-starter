@@ -5,24 +5,22 @@
  * @license      Licensed under the MIT license
  */
 
-var config = require('../config');
+const config = require('../config');
 if (!config.fonts) return;
 
-var browserSync = require('browser-sync');
-var gulp        = require('gulp');
-var changed     = require('gulp-changed');
-var path        = require('path');
+const path        = require('path');
+const browserSync = require('browser-sync');
+const gulp        = require('gulp');
+const changed     = require('gulp-changed');
 
-var paths = {
+const paths = {
     src  : path.join(config.root.src, config.fonts.src, '/**/*.{' + config.fonts.extensions + '}'),
     build: path.join(config.root.build, config.fonts.build)
 };
 
-var fontsTask = function () {
+gulp.task('fonts', function () {
     return gulp.src([paths.src])
         .pipe(changed(paths.build)) // Ignore unchanged files
         .pipe(gulp.dest(paths.build))
         .pipe(browserSync.stream())
-};
-
-gulp.task('fonts', fontsTask);
+});

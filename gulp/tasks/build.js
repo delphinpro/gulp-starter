@@ -5,12 +5,12 @@
  * @license      Licensed under the MIT license
  */
 
-var gulp         = require('gulp');
-var gulpSequence = require('gulp-sequence');
-var config       = require('../config.js');
+const config = require('../config.js');
+if (!config.defaultTasks) return;
 
-var buildTask = function (cb) {
+const gulp         = require('gulp');
+const gulpSequence = require('gulp-sequence');
+
+gulp.task('build', function (cb) {
     gulpSequence(config.defaultTasks, cb);
-};
-
-gulp.task('build', buildTask);
+});
