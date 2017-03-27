@@ -5,18 +5,19 @@
  * @license      Licensed under the MIT license
  */
 
-const config = require('../config');
+const config = require('../../gulpfile');
 if (!config.twig) return;
 
-const fs           = require('fs');
-const path         = require('path');
-const browserSync  = require('browser-sync');
-const gulp         = require('gulp');
-const data         = require('gulp-data');
-const twig         = require('gulp-twig');
-const changed      = require('gulp-changed-in-place');
-const handleErrors = require('../lib/handleErrors');
-const functions    = require('../functions');
+const fs        = require('fs');
+const path      = require('path');
+const bs        = require('browser-sync').create();
+const gulp      = require('gulp');
+const data      = require('gulp-data');
+const twig      = require('gulp-twig');
+const changed   = require('gulp-changed-in-place');
+const tools     = require('../lib/tools');
+const notify    = require('../lib/handleErrors');
+const functions = require('../functions');
 
 let exclude    = path.normalize('!**/{' + config.twig.excludeFolders.join(',') + '}/**');
 let extensions = config.twig.extensions.filter(function (item) {
@@ -25,13 +26,13 @@ let extensions = config.twig.extensions.filter(function (item) {
 
 const paths = {
     src  : [
-        path.join(config.root.src, config.twig.src, '/**/*.{' + extensions + '}'),
+        path.join(config.root.src, config.twig.src, tools.mask(extensions)),
         exclude
     ],
     build: path.join(config.root.build, config.twig.build)
 };
 
-function getData(file) {
+function getData() {
     let dataPath = path.resolve(config.root.src, config.twig.src, config.twig.dataFile);
     return JSON.parse(fs.readFileSync(dataPath, 'utf8'));
 }
@@ -39,13 +40,13 @@ function getData(file) {
 gulp.task('twig', function () {
     return gulp.src(paths.src)
         .pipe(data(getData))
-        .on('error', handleErrors)
+        .on('error', notify)
         .pipe(twig({
             base     : [path.join(config.root.src, config.twig.src)],
             functions: functions
         }))
-        .on('error', handleErrors)
+        .on('error', notify)
         .pipe(changed({firstPass: true}))
         .pipe(gulp.dest(paths.build))
-        .pipe(browserSync.stream());
+        .pipe(bs.stream());
 });

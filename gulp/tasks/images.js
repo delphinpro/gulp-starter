@@ -5,17 +5,18 @@
  * @license      Licensed under the MIT license
  */
 
-const config = require('../config');
+const config = require('../../gulpfile');
 if (!config.images) return;
 
 const path           = require('path');
-const browserSync    = require('browser-sync');
+const bs             = require('browser-sync').create();
 const gulp           = require('gulp');
 const changed        = require('gulp-changed');
 const imagesOptimize = require('gulp-imagemin');
+const tools          = require('../lib/tools');
 
 const paths = {
-    src  : path.join(config.root.src, config.images.src, '/**/*.{' + config.images.extensions + '}'),
+    src  : path.join(config.root.src, config.images.src, tools.mask(config.images.extensions)),
     build: path.join(config.root.build, config.images.build)
 };
 
@@ -31,5 +32,5 @@ gulp.task('images', function () {
             imagesOptimize.svgo()// default
         ]))
         .pipe(gulp.dest(paths.build))
-        .pipe(browserSync.stream())
+        .pipe(bs.stream())
 });

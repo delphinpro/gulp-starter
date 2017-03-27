@@ -7,14 +7,14 @@
  * @license     licensed under the MIT license
  */
 
-const config       = require('../config.js');
+const config = require('../../gulpfile');
 if (!config.defaultTasks) return;
 
 const gulp         = require('gulp');
 const gulpSequence = require('gulp-sequence');
 
-
-gulp.task('production', function (cb) {
+gulp.task('production', function (done) {
     global.production = true;
-    gulpSequence(config.defaultTasks, cb);
+    let args = config.defaultTasks.concat(done);
+    gulpSequence.apply(null, args);
 });
