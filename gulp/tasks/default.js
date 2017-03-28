@@ -12,6 +12,5 @@ const gulp         = require('gulp');
 const gulpSequence = require('gulp-sequence');
 
 gulp.task('default', function (done) {
-    let args = config.defaultTasks.concat('watch', done);
-    gulpSequence.apply(null, args);
+    gulpSequence.apply(null, ['build', 'watch', done]);
 });
