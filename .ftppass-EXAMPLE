@@ -1,0 +1,9 @@
+{
+  "main": {
+    "host": "ftp.domain.ru",
+    "port": 22,
+    "user": "login",
+    "pass": "password",
+    "remotePath": "/domains/domain.ru"
+  }
+}
