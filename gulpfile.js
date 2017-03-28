@@ -24,7 +24,7 @@ let config = {
 
     watchableTasks: ['twig', 'js', 'scss', 'images', 'fonts'],
 
-    defaultTasks: [['twig', 'js', 'scss', 'images', 'fonts']],
+    defaultTasks: [['twig', 'vendor', 'js', 'scss', 'images', 'fonts']],
 
     scss: {
         src         : 'sass',
