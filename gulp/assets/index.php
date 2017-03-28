@@ -53,7 +53,7 @@ usort($files, function ($a, $b) {
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <link rel="stylesheet" href="design/css/dev.css">
+    <link rel="stylesheet" href="dev-tools/dev.css">
 </head>
 <body class="index-page">
 
@@ -113,6 +113,6 @@ usort($files, function ($a, $b) {
 
 <? //echo '<pre>';?>
 <? //print_r($_SERVER); ?>
-<script src="design/js/dev.js"></script>
+<script src="dev-tools/dev.js"></script>
 </body>
 </html>

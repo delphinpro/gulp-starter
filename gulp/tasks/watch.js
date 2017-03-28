@@ -20,4 +20,6 @@ gulp.task('watch', ['browserSync'], function () {
             gulp.watch(glob, [taskName]);
         }
     });
+    gulp.watch('gulp/assets/dev-tools/**/*.scss', ['assets:css']);
+    gulp.watch('gulp/assets/dev-tools/**/*.js', ['assets:js']);
 });
