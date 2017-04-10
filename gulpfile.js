@@ -70,6 +70,7 @@ let config = {
 
     // http://www.browsersync.io/docs/options/
     browserSync: {
+        watchOptions: {ignoreInitial: true},
         files    : [_build + '**/*.css', _build + '**/*.html'],
         browser  : _browsers,
         notify   : true,
