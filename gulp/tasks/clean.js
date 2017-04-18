@@ -12,7 +12,10 @@ const gulp = require('gulp');
 const del  = require('del');
 
 gulp.task('clean', function (done) {
-    del([config.root.build]).then(function () {
+    del([config.root.build]).then(function (paths) {
+        paths.forEach(function (path) {
+            console.log('Remove: ' + path);
+        });
         done()
     })
 });
