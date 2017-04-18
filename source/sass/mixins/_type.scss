@@ -1,3 +1,9 @@
+$root-font-size: 16px !default;
+
+@function rem($px) {
+  @return $px / $root-font-size * 1rem;
+}
+
 @mixin letter-spacing($value) {
   letter-spacing: $value / 1000 * 1em;
 }
