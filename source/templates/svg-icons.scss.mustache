@@ -1,0 +1,13 @@
+// auto generated file
+
+.i {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  fill: none;
+  stroke: currentColor;
+}
+
+{{#shapes}}
+.i-{{base}} { @include size(rem({{width.inner}}px), rem({{height.inner}}px)); }
+{{/shapes}}

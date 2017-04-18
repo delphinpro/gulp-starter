@@ -24,12 +24,12 @@ let config = {
 
     watchableTasks: ['twig', 'js', 'scss', 'images', 'fonts'],
 
-    defaultTasks: [['twig', 'vendor', 'js', 'scss', 'images', 'fonts']],
+    defaultTasks: [['sprite:svg'], ['assets'], ['twig', 'vendor', 'js', 'scss', 'images', 'fonts']],
 
     scss: {
         src         : 'sass',
         build       : 'design/css',
-        sass        : {},
+        sass        : {outputStyle: 'nested'},
         autoprefixer: {
             browsers: ['last 5 versions', 'ie 8-9']
         },
@@ -60,6 +60,13 @@ let config = {
         src       : "images",
         build     : "design/images",
         extensions: ["jpg", "png", "svg", "gif"]
+    },
+
+    sprite: {
+        svg: {
+            src : "source/sprites/svg/*.svg",
+            dest: "../svg-sprite.svg",
+        },
     },
 
     fonts: {
