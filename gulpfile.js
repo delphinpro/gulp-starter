@@ -70,14 +70,15 @@ let config = {
 
     // http://www.browsersync.io/docs/options/
     browserSync: {
-        watchOptions: {ignoreInitial: true},
-        files    : [_build + '**/*.css', _build + '**/*.html'],
-        browser  : _browsers,
-        notify   : true,
-        startPath: '/',
-        proxy    : _localDomain,
-        port     : _serverPort,
-        ghostMode: {
+        watchOptions  : {ignoreInitial: true},
+        files         : ['' + _build + '**/*.*', '!' + _build + '**/*.map'],
+        browser       : _browsers,
+        notify        : true,
+        startPath     : '/',
+        proxy         : _localDomain,
+        port          : _serverPort,
+        reloadDebounce: 500,
+        ghostMode     : {
             clicks: true,
             forms : true,
             scroll: false
