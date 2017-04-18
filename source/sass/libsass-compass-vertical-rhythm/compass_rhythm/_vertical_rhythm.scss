@@ -123,11 +123,11 @@ $compass-rhythm-support-ie6: false;
 // for rem output.
 // Include the $img argument if you would rather use your own image than the
 // Compass default gradient image.
-@mixin debug-vertical-alignment($img: false) {
+@mixin debug-vertical-alignment($color: $grid-background-baseline-color, $img: false) {
   @if $img {
     //background: image-url($img);
   } @else {
-    @include baseline-grid-background(if($round-to-nearest-half-line, rhythm(1/2), rhythm(1)));
+    @include baseline-grid-background(if($round-to-nearest-half-line, rhythm(1/2), rhythm(1)), $color);
   }
 }
 

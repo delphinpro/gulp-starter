@@ -26,3 +26,11 @@
     }
   }
 }
+
+@mixin debug-rhythm-grid($color: #4affff, $alpha: 0.4) {
+  @if ($DEV_MODE) {
+    .dev-mode & {
+      @include debug-vertical-alignment(rgba($color, $alpha));
+    }
+  }
+}

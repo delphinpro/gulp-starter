@@ -8,7 +8,16 @@ $show-baseline-grid-backgrounds: true !default;
 // toggle all your grids on and off
 $show-grid-backgrounds: true !default;
 
+// Create the gradient needed for baseline grids
+@function get-baseline-gradient(
+  $color : $grid-background-baseline-color
+) {
+  $gradient: linear-gradient(to top, $color 5%, rgba($color, 0) 5%);
+  @return $gradient;
+}
+
 // Add just the baseline grid to an element's background
+//noinspection CssOptimizeSimilarProperties
 @mixin baseline-grid-background(
   $baseline : $grid-background-baseline-height,
   $color    : $grid-background-baseline-color
@@ -18,12 +27,4 @@ $show-grid-backgrounds: true !default;
     background-size: 100% $baseline;
     background-position: left top;
   }
-}
-
-// Create the gradient needed for baseline grids
-@function get-baseline-gradient(
-  $color : $grid-background-baseline-color
-) {
-  $gradient: linear-gradient(to top, $color 5%, rgba($color, 0) 5%);
-  @return $gradient;
 }
