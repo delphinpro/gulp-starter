@@ -17,3 +17,12 @@
     @warn 'Invalid param: $depth (allow in 1..5)';
   }
 }
+
+@mixin outline($color: red, $thickness: 1px) {
+  @if ($DEV_MODE) {
+    .dev-mode & {
+      outline: $thickness dotted $color;
+      outline-offset: -$thickness;
+    }
+  }
+}
