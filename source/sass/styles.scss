@@ -1,2 +1,17 @@
-
+///
+/// Configuration and mixins/functions
+///==============================================
+//$base-font-size: 15px !global;
+//$base-line-height: 24px !global;
+//$rhythm-unit: "rem" !global;
+//$rem-with-px-fallback: true !global;
+//$default-rhythm-border-width: 1px !global;
+//$default-rhythm-border-style: solid !global;
+//$round-to-nearest-half-line: true !global;
+//$min-line-padding: 2px !global;
+@import "libsass-compass-vertical-rhythm/compass_rhythm";
 @import "mixins";
+
+///
+/// Styles
+///==============================================
