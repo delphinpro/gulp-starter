@@ -24,12 +24,17 @@
         var statesList  = ['off', 'on'];
 
         var currents = {
+            mode  : getCurrent('mode', statesList[1]),
             state  : getCurrent('state', statesList[1]),
             filter : getCurrent('filter', filtersList[0]),
             opacity: getCurrent('opacity', 0.5)
         };
 
         var targets = {
+            mode  : {
+                elem: doc.body,
+                attr: 'class'
+            },
             state  : {
                 elem: doc.documentElement,
                 attr: 'data'
@@ -51,6 +56,21 @@
             listName     : 'states',
             itemName     : 'state',
             target       : targets.state,
+            type         : 'button',
+            list         : statesList,
+            canDisableAll: true,
+            attrs        : {
+                tabindex: 1,
+            }
+        };
+
+        // DevMode switcher params
+        var paramModes = {
+            elemTag      : 'button',
+            elemText     : 'grid',
+            listName     : 'modes',
+            itemName     : 'mode',
+            target       : targets.mode,
             type         : 'button',
             list         : statesList,
             canDisableAll: true,
@@ -136,6 +156,7 @@
 
         function initControls() {
             createButton(paramsStates);
+            createButton2(paramModes);
             createButton(paramsFilters);
             createInputNumber(paramsOpacity);
 
@@ -205,6 +226,80 @@
                     }
                 }
             };
+        }
+
+        function createButton2(params) {
+            var listName      = params.listName;
+            var itemName      = params.itemName;
+            var elemTag       = params.elemTag;
+            var elemText      = params.elemText;
+            var type          = params.type;
+            var list          = params.list;
+            var action        = params.action;
+            var currentVal    = currents[itemName];
+            var attrs         = params.attrs;
+            var currentNum    = list.indexOf(currentVal);
+            var canDisableAll = params.canDisableAll;
+
+            var id    = itemName;
+            var input = doc.createElement(elemTag);
+            input.classList.add(panelClass + '__control', panelClass + '__control--' + type);
+            input.setAttribute('type', type);
+            input.setAttribute('id', id);
+            input.dataset.stateNum = currentNum;
+
+            if (attrs) {
+                for (var attr in attrs) {
+                    if (attrs.hasOwnProperty(attr)) {
+                        input.setAttribute(attr, attrs[attr]);
+                    }
+                }
+            }
+
+            if (elemTag === 'button') {
+                input.innerHTML = elemText;
+            }
+
+            if (!canDisableAll) {
+                canBeDisabled.push(input);
+            }
+
+            controlsPanel.appendChild(input);
+
+            input.onclick = function () {
+                if (!params.target) {
+                    return;
+                }
+
+                currentNum = +!currentNum;
+                currentVal = list[currentNum];
+
+                input.dataset.stateNum = currentNum;
+                saveLocalStorage(itemName, currentVal);
+
+                if (canDisableAll && canDisableAll === true) {
+                    if (currentVal === 'off') {
+                        params.target.elem.classList.remove('dev-mode');
+                    }
+                    else {
+                        params.target.elem.classList.add('dev-mode');
+                    }
+                }
+            };
+
+            currentVal = list[currentNum];
+
+            input.dataset.stateNum = currentNum;
+            saveLocalStorage(itemName, currentVal);
+
+            if (canDisableAll && canDisableAll === true) {
+                if (currentVal === 'off') {
+                    params.target.elem.classList.remove('dev-mode');
+                }
+                else {
+                    params.target.elem.classList.add('dev-mode');
+                }
+            }
         }
 
         //---------------------------------------------
@@ -439,19 +534,19 @@
         var isGridBuilt = false;
         checkHash       = function () {
             var row, container, grid, i;
-            if (location.hash == '#dev') {
-                if (!isGridBuilt) {
-                    isGridBuilt = true;
-                    grid        = elem(cssPrefix);
-                    container   = elem(cssPrefix + '__container');
-                    row         = elem(cssPrefix + '__row');
-                    for (i = 0; i < gridColumns; i++) {
-                        row.appendChild(elem(cssPrefix + '__col'));
-                    }
-                    container.appendChild(row);
-                    grid.appendChild(container);
-                    document.body.appendChild(grid);
+            if (!isGridBuilt) {
+                isGridBuilt = true;
+                grid        = elem(cssPrefix);
+                container   = elem(cssPrefix + '__container');
+                row         = elem(cssPrefix + '__row');
+                for (i = 0; i < gridColumns; i++) {
+                    row.appendChild(elem(cssPrefix + '__col'));
                 }
+                container.appendChild(row);
+                grid.appendChild(container);
+                document.body.appendChild(grid);
+            }
+            if (location.hash == '#dev') {
                 document.body.classList.add(cssFlag);
                 addHashes();
             } else {
