@@ -1,20 +1,17 @@
 # gulp-starter
 
 ###Begin
+
     git clone https://delphinpro/gulp-starter .
     npm install -g bower 
     npm install
 
 ###Commands:
 
-__Development__
+`gulp` - development
 
-    npm run start
+`gulp vendor` - build vendors (with bower)
 
-__Build production__
+`gulp clean` - clean public_html
 
-    npm run build
-
-__Clean__
-
-    npm run clean
+`gulp sprite:svg` - build svg sprite
