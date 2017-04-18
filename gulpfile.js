@@ -22,9 +22,9 @@ let config = {
         build: _build
     },
 
-    watchableTasks: ['twig', 'js', 'scss', 'images', 'fonts'],
+    watchableTasks: ['twig', 'es6', 'scss', 'images', 'fonts'],
 
-    defaultTasks: [['sprite:svg'], ['assets'], ['twig', 'vendor', 'js', 'scss', 'images', 'fonts']],
+    defaultTasks: [['sprite:svg'], ['assets'], ['twig', 'vendor', 'es6', 'scss', 'images', 'fonts']],
 
     scss: {
         src         : 'sass',
@@ -38,6 +38,14 @@ let config = {
             source     : '/design/images/',
             replacement: '../images/'
         }
+    },
+
+    es6: {
+        src       : 'js',
+        build     : 'design/js',
+        order     : [],
+        filename  : 'build.js',
+        extensions: ['js']
     },
 
     js: {
