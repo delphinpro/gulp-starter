@@ -29,15 +29,13 @@ const paths = {
 
 gulp.task('scss', function () {
     return gulp.src(paths.src)
-        .pipe(_if(!global.production, sourceMaps.init()))
+        .pipe(sourceMaps.init())
         .pipe(sass(config.scss.sass))
         .on('error', notify)
         .pipe(changed({firstPass: true}))
         .pipe(autoprefixer(config.scss.autoprefixer))
-        .pipe(_if(global.production, cssnano({autoprefixer: false})))
-        .pipe(_if(!global.production, sourceMaps.write('.')))
-        .pipe(_if(global.production, rename({suffix: '.min'})))
         .pipe(resolver(config.scss.resolver))
+        .pipe(sourceMaps.write('.'))
         .pipe(gulp.dest(paths.build))
         .pipe(bs.stream())
 });
