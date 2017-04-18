@@ -1,0 +1,19 @@
+///
+/// Add shadow
+/// Get from materialize.css
+///
+@mixin z-depth($depth: 1) {
+  @if ($depth == 1) {
+    box-shadow: rgba(0, 0, 0, 0.117647) 0 1px 6px, rgba(0, 0, 0, 0.117647) 0 1px 4px;
+  } @else if ($depth == 2) {
+    box-shadow: rgba(0, 0, 0, 0.156863) 0 3px 10px, rgba(0, 0, 0, 0.227451) 0 3px 10px;
+  } @else if ($depth == 3) {
+    box-shadow: rgba(0, 0, 0, 0.188235) 0 10px 30px, rgba(0, 0, 0, 0.227451) 0 6px 10px;
+  } @else if ($depth == 4) {
+    box-shadow: rgba(0, 0, 0, 0.247059) 0 14px 45px, rgba(0, 0, 0, 0.219608) 0 10px 18px;
+  } @else if ($depth == 5) {
+    box-shadow: rgba(0, 0, 0, 0.298039) 0 19px 60px, rgba(0, 0, 0, 0.219608) 0 15px 20px;
+  } @else {
+    @warn 'Invalid param: $depth (allow in 1..5)';
+  }
+}
