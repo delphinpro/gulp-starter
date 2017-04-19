@@ -7,3 +7,16 @@ $root-font-size: 16px !default;
 @mixin letter-spacing($value) {
   letter-spacing: $value / 1000 * 1em;
 }
+
+@mixin vertical-rhythm-helpers() {
+  @for $i from 0 through 6 {
+    $val: str-replace(#{$i/2}, '.', '\\/');
+    .mt-#{$val} { @include margin-leader($i / 2); }
+    .mb-#{$val} { @include margin-trailer($i / 2); }
+    .pt-#{$val} { @include padding-leader($i / 2); }
+    .pb-#{$val} { @include padding-trailer($i / 2); }
+
+    .st-#{$val} { @include apply-side-rhythm-border(top, 1px, $i / 2); }
+    .sb-#{$val} { @include apply-side-rhythm-border(bottom, 1px, $i / 2); }
+  }
+}
