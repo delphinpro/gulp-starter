@@ -8,14 +8,26 @@
 const config = require('../../gulpfile');
 if (!config.root.build) return;
 
-const gulp = require('gulp');
+const fs   = require('fs');
+const path = require('path');
 const del  = require('del');
+const gulp = require('gulp');
 
 gulp.task('clean', function (done) {
-    del([config.root.build]).then(function (paths) {
-        paths.forEach(function (path) {
-            console.log('Remove: ' + path);
-        });
-        done()
-    })
+
+    let targets = [path.join(config.root.build, '*.*')];
+
+    fs.readdirSync(config.root.build).forEach(node => {
+        let name = path.join(config.root.build, node);
+        if (fs.statSync(name).isDirectory()) {
+            targets.push(path.join(name, '**'));
+        }
+    });
+    console.log('Targets', targets);
+
+    del(targets).then(paths => {
+        paths.forEach(path => console.log('Remove: ' + path));
+        done();
+    });
+
 });
