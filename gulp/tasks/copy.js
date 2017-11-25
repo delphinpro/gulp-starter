@@ -1,8 +1,8 @@
 /**
- * Gulp-task. Build fonts.
+ * Copy other files
  *
  * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2015-2017 delphinpro
+ * @copyright   copyright © 2017 delphinpro
  * @license     licensed under the MIT license
  */
 
@@ -10,12 +10,14 @@ const path    = require('path');
 const bs      = require('browser-sync');
 const gulp    = require('gulp');
 const changed = require('gulp-changed');
-const tools   = require('../lib/tools');
+
+let timeout;
 
 module.exports = function(options) {
 
-  let src   = path.join(options.root.src, options.fonts.src, tools.mask(options.fonts.extensions));
-  let build = path.join(options.root.build, options.fonts.build);
+  let source = options.copy.src.map(function(item) {
+    return path.join(options.root.src, item);
+  });
 
   return function() {
     let bsHasInstance = bs.has(options.bs.instance);
@@ -25,13 +27,17 @@ module.exports = function(options) {
       bsInstance = bs.get(options.bs.instance);
     }
 
-    let pipeline = gulp.src([src])
-    .pipe(changed(build))
-    .pipe(gulp.dest(build));
+    let pipeline = gulp.src(source)
+    .pipe(changed(options.root.build))
+    .pipe(gulp.dest(options.root.build));
 
     if (bsHasInstance) {
       pipeline = pipeline.on('end', function() {
-        bsInstance.reload();
+        bsInstance.notify('<span style="color:red">Copy files...</span>', 2000);
+        clearTimeout(timeout);
+        timeout = setTimeout(function() {
+          bsInstance.reload();
+        }, 1000);
       });
     }
 

@@ -1,14 +1,19 @@
 /**
  * Errors handle.
  *
- * @since        22.04.2016 21:16
- * @license      Licensed under the MIT license
+ * @author      delphinpro <delphinpro@gmail.com>
+ * @copyright   copyright © 2016-2017 delphinpro
+ * @license     licensed under the MIT license
  */
 
 const notify = require('gulp-notify');
 
-module.exports = function (errorObject, callback) {
-    notify.onError(errorObject.toString().split(': ').join(':\n')).apply(this, arguments);
-    // Keep gulp from hanging on this task
-    if (typeof this.emit === 'function') this.emit('end');
+module.exports = function(errorObject, callback) {
+  notify
+  .onError(errorObject.toString().split(': ').join(':\n'))
+  .apply(this, arguments);
+
+  if (typeof this.emit === 'function') {
+    this.emit('end');
+  }
 };

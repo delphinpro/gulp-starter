@@ -1,0 +1,110 @@
+////
+/// @author delphinpro <delphinpro@gmail.com>
+/// @copyright copyright © 2017 delphinpro
+/// @license licensed under the MIT license
+////
+
+/*==
+ *== Button
+ *== ======================================= ==*/
+
+.ft-button {
+  background: mix(rgb(146, 146, 146), rgb(95, 95, 95));
+  background-image: linear-gradient(to bottom, rgb(146, 146, 146) 0%, rgb(95, 95, 95) 100%);
+  border-radius: 4px;
+  border: 1px outset #cccccc;
+  box-shadow: 0 0 2px 0 #000000;
+  color: #ffffff;
+  cursor: pointer;
+  display: block;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  line-height: 1;
+  height: 26px;
+  margin: 0;
+  padding: 0 10px;
+  position: relative;
+  text-align: center;
+  text-shadow: 0 1px 1px #000000, 0 1px 1px #000000;
+  width: 100%;
+  user-select: none;
+
+  &:focus {
+    outline: none !important;
+  }
+
+  &__light {
+    border: 1px inset #cccccc;
+    width: 22px;
+    border-radius: 6px;
+    margin: -0px auto 2px auto;
+    > * {
+      display: block;
+      width: 21px;
+      height: 3px;
+      background: #4c4c4c;
+      border: 1px solid #393939;
+      border-radius: 6px;
+    }
+  }
+
+  &_drag {
+    cursor: move;
+    display: flex;
+    padding: 0;
+    width: 20px;
+
+    > span {
+      $b1: #bbbbbb;
+      $b2: #222222;
+      width: 50%;
+      height: 2px;
+      margin: auto;
+      border-top: 1px solid $b1;
+      border-bottom: 1px solid $b2;
+      position: relative;
+
+      &::before { top: -4px; }
+      &::after { bottom: -4px; }
+      &::before, &::after {
+        content: '';
+        width: 100%;
+        height: 2px;
+        border-top: 1px solid $b1;
+        border-bottom: 1px solid $b2;
+        position: absolute;
+        left: 0;
+      }
+    }
+  }
+
+  &_state_on,
+  &:active {
+    outline: none !important;
+    //width: 50px;
+    //height: 30px;
+    //left: 5px;
+    //top: 2px;
+    //border: 0;
+    border-color: transparent;
+    background: #000000;
+    background-image: linear-gradient(to bottom, rgb(116, 116, 116) 0%, rgb(70, 70, 70) 100%);
+    box-shadow: 0 0 2px #000000, inset 1px 1px 6px rgba(#000000, 0.5);
+    text-shadow: 0 -1px 1px #000000, 0 -1px 1px #000000;
+  }
+  $light-color: #f5a3ff;
+  $light-color: #50ff3d;
+  &_state_on &__light,
+  &:active &__light {
+    background: $light-color;
+    border-color: adjust_hue(desaturate(darken($light-color, 42%), 76%), 5); // #7f4e80
+    position: relative;
+  }
+  &_state_on &__light > *,
+  &:active &__light > * {
+    background: $light-color;
+    border: 1px solid darken($light-color, 7%);
+    box-shadow: 0 0 16px 4px rgba(darken($light-color, 7%), 0.8);
+    //box-shadow: 0 0 16px 8px rgba(darken($light-color, 7%), 0.8);
+  }
+}

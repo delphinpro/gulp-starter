@@ -1,0 +1,212 @@
+////
+/// @author delphinpro <delphinpro@gmail.com>
+/// @copyright copyright © 2017 delphinpro
+/// @license licensed under the MIT license
+////
+
+$dev-grid-style: guides !default;
+//$dev-grid-style: false !default;
+$dev-grid-show-center-guides: true !default;
+$dev-grid-show-label: true !default;
+$dev-grid-guides-color: rgba(#4affff, 0.6) !default;
+$MAX_INT32: 2147483647;
+
+@import "../../../source/sass/config/grid-system";
+@import "../../../bower_components/bs-grid-system/source/scss/mixins";
+
+$grid-columns: 12 !default;
+$grid-gutter-width-base: 30px !default;
+$grid-breakpoints: (xs: 0, sm: 576px, md: 768px, lg: 992px, xl: 1200px) !default;
+$container-max-widths: (sm: 540px, md: 720px, lg: 960px, xl: 1140px) !default;
+$grid-gutter-widths: (xs: 30px, sm: 30px, md: 30px, lg: 30px, xl: 30px) !default;
+
+// delphinpro dev tools row mixin
+@mixin ddt-row() {
+  display: flex;
+  flex-wrap: wrap;
+
+  @if mixin_exists('media-breakpoint-up') {
+    @each $breakpoint in map-keys($grid-gutter-widths) {
+      @include media-breakpoint-up($breakpoint) {
+        $gutter: map-get($grid-gutter-widths, $breakpoint);
+        margin-right: ($gutter / -2);
+        margin-left: ($gutter / -2);
+      }
+    }
+  } @else {
+    @debug 'No mixin named "media-breakpoint-up"';
+  }
+}
+
+// delphinpro dev tools container mixin
+@mixin ddt-container() {
+  @if (mixin_exists(make-container)) {
+    @include make-container();
+  } @else {
+    @debug "No mixin named 'make-container'";
+  }
+  @if (mixin_exists(make-container-max-widths)) {
+    @include make-container-max-widths();
+  } @else {
+    @debug "No mixin named 'make-container-max-width'";
+  }
+}
+
+@mixin ddt-col-ready() {
+  position: relative;
+  width: 100%;
+  min-height: 1px; // Prevent collapsing
+
+  @if (mixin_exists(media-breakpoint-up)) {
+    @each $breakpoint in map-keys($grid-gutter-widths) {
+      @include media-breakpoint-up($breakpoint) {
+        $gutter: map-get($grid-gutter-widths, $breakpoint);
+        padding-right: ($gutter / 2);
+        padding-left: ($gutter / 2);
+      }
+    }
+  } @else {
+    @debug "No mixin named 'media-breakpoint-up'";
+  }
+}
+
+@mixin ddt-col($size, $columns: $grid-columns) {
+  flex: 0 0 percentage($size / $columns);
+  max-width: percentage($size / $columns);
+}
+
+@mixin ddt-offset($size, $columns: $grid-columns) {
+  margin-left: percentage($size / $columns);
+}
+
+.dev-grid {
+  box-sizing: border-box;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  z-index: $MAX_INT32;
+  pointer-events: none;
+  display: none;
+  height: 0;
+  //height: 100vh;
+
+  html[data-grid=on] & { display: block; }
+
+  @if $dev-grid-show-label {
+    z-index: $MAX_INT32;
+    &::before {
+      z-index: $MAX_INT32;
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      background: rgba(#000, 0.7);
+      padding: 0.2em 0.5em 0;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffffff;
+      content: 'XS0';
+
+      @each $breakpoint, $value in $grid-breakpoints {
+        @include media-breakpoint-up($breakpoint) {
+          $nextValue: map_get($grid-breakpoints, breakpoint-next($breakpoint));
+          content: '#{to_upper_case($breakpoint)}: #{$value}..#{$nextValue}';
+        }
+      }
+    }
+  }
+
+  &__container {
+    @include ddt-container();
+  }
+
+  &__row {
+    @include ddt-row();
+  }
+
+  &__container,
+  &__container > &__row {
+    height: 100%;
+  }
+
+  &__col {
+    border-right: 1px solid rgba(red, 0.1);
+    &:first-child {
+      border-left: 1px solid rgba(red, 0.1);
+    }
+    height: 100vh;
+    position: relative;
+    width: percentage(1/12);
+
+    @if $dev-grid-style == guides {
+      &, &:first-child {
+        border-color: $dev-grid-guides-color;
+      }
+    }
+    @if $dev-grid-show-center-guides == false {
+      height: 0;
+    }
+    &::before {
+      box-sizing: border-box;
+      background: rgba(red, 0.03);
+      content: '';
+      height: 100vh;
+      left: 0;
+      position: absolute;
+      top: 0;
+      @if $dev-grid-style == guides {
+        border-right: 1px solid $dev-grid-guides-color;
+        background: none;
+      }
+    }
+    &::after {
+      box-sizing: border-box;
+      background: rgba(red, 0.03);
+      content: '';
+      height: 100vh;
+      position: absolute;
+      right: 0;
+      top: 0;
+      @if $dev-grid-style == guides {
+        border-left: 1px solid $dev-grid-guides-color;
+        background: none;
+      }
+    }
+
+    @each $bpName, $bpValue in $grid-breakpoints {
+      @media (min-width: $bpValue) {
+        $col-padding: map_get($grid-gutter-widths, $bpName) / 2;
+        padding: 0 ($col-padding - 1px);
+        &::before, &::after {
+          width: ($col-padding - 1px);
+        }
+      }
+    }
+
+    @if (mixin_exists('media-breakpoint-down')) {
+      @include media-breakpoint-down(xs) {
+        width: 100%;
+        &:not(:first-child) { display: none; }
+      }
+    }
+  }
+}
+
+/* STATES & MODES
+--------------------------------------------- */
+
+html[data-on="on"] {
+  body {
+    opacity: 0.5;
+  }
+  &[data-invert="on"] {
+    body {
+      filter: invert(1);
+    }
+  }
+}
+
+html[data-on="off"] {
+  background: none;
+}

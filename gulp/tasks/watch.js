@@ -1,25 +1,47 @@
 /**
  * Watch task
  *
- * @since        22.04.2016 20:43
- * @license      Licensed under the MIT license
+ * @author      delphinpro <delphinpro@gmail.com>
+ * @copyright   copyright © 2016-2017 delphinpro
+ * @license     licensed under the MIT license
  */
-
-const config = require('../../gulpfile');
-if (!config.watchableTasks) return;
 
 const path  = require('path');
 const gulp  = require('gulp');
 const tools = require('../lib/tools');
 
-gulp.task('watch', ['browserSync'], function () {
-    config.watchableTasks.forEach(function (taskName) {
-        let task = config[taskName];
-        if (task) {
-            let glob = path.join(config.root.src, task.src, tools.mask(task.extensions));
+module.exports = function(options) {
+  return function(done) {
+    options.watchableTasks.forEach(function(taskName) {
+      let task = options[taskName];
+      if (task) {
+        if (typeof task.src === 'string') {
+          let glob = path.join(options.root.src, task.src, tools.mask(task.extensions));
+          gulp.watch(glob, [taskName]);
+        } else if (typeof task.src === 'object') {
+          for (let i = 0; i < task.src.length; i++) {
+            let glob;
+            if (task.extensions) {
+              glob = path.join(options.root.src, task.src[i], tools.mask(task.extensions));
+            } else {
+              glob = path.join(options.root.src, task.src[i]);
+            }
             gulp.watch(glob, [taskName]);
+          }
         }
+
+        if (taskName === 'twig') {
+          gulp.watch(path.join(options.root.src, task.dataFile), [taskName]);
+        }
+      }
     });
-    gulp.watch('gulp/assets/dev-tools/**/*.scss', ['assets:css']);
-    gulp.watch('gulp/assets/dev-tools/**/*.js', ['assets:js']);
-});
+
+    gulp.watch('gulp/frontend-tools/**/*.scss', ['frontend-tools:js']);
+    gulp.watch('gulp/frontend-tools/**/*.js', ['frontend-tools:js']);
+    gulp.watch('gulp/frontend-tools/*.*', ['frontend-tools:misc']);
+    gulp.watch('gulp/frontend-tools/static/**', ['frontend-tools:misc']);
+    gulp.watch('gulp/frontend-tools/classes/**', ['frontend-tools:misc']);
+    gulp.watch('README.md', ['docs']);
+    gulp.watch('docs/**', ['docs']);
+  };
+};

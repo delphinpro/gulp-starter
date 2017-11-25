@@ -1,17 +1,53 @@
 # gulp-starter
 
-###Begin
+Верстка [Ссылка на собранную верстку (просмотр)](#)
 
-    git clone https://delphinpro/gulp-starter .
-    npm install -g bower 
-    npm install
+Собранная верстка (архив) [в загрузках репозитория](https://bitbucket.org/username/projectname/downloads/)
 
-###Commands:
+## Документация
 
-`gulp` - development
+  - [Example](docs/example.md)
 
-`gulp vendor` - build vendors (with bower)
+## Разработка / сборка проекта
 
-`gulp clean` - clean public_html
+### Подготовка
 
-`gulp sprite:svg` - build svg sprite
+Установить LTS версию NodeJS ([Скачать NodeJS, v8.5 или выше](https://nodejs.org/en/download/))
+
+Установить глобально пакеты `gulp` (^3.9), `webpack` (^3.0), `bower` (^1.8):
+```text
+npm install -g gulp webpack bower
+```
+
+Установить зависимости проекта
+```text
+bower install
+npm install
+```
+
+Запустить необходимую gulp-задачу
+
+### Gulp-задачи
+
+Задача           | Описание
+             ---:|:---
+|                | ***Основные***
+`default`        | Сборка проекта и запуск сервера разработки.
+`development`    | Ускоренная (неполная) пересборка проекта и запуск сервера разработки.
+`build`          | Сборка проекта. Проект собирается в папку *public_html*.
+`clean`          | Очистка сборки, исключая элементы, указанные в опции `exclude` (_gulp.config.js_).
+`clean:preview`  | Предпросмотр того, что будет удалено при очистке.
+|                | ***Сборка отдельных частей***
+`bower`          | Сборка вендоров из *bower_components*.
+`copy`           | Копирование служебных файлов в сборку. Сейчас это содержимое папки *source/assets*. 
+`scss`           | Компиляция стилей.
+`twig`           | Компиляция разметки страниц.
+`images`         | Оптимизация и копирование изображений.
+`fonts`          | Копирование шрифтов.
+`sprite`         | Сборка svg-спрайтов.
+`webpack:vendor` | Компиляция javascript-зависимостей. Выполнить один раз при изменении списка вендоров или при первичной сборке. Автоматически выполняется в задаче `default`.
+`webpack`        | Компиляция javascript-кода.
+|                | ***Остальные***
+`frontend-tools` | Заглавная страница для просмотра вёрстки и плавающая панель для наложения макета на страницу (pixel-perfect) и включения сетки.
+`watch`          | Запуск отслеживания изменений в исходных файлах. Автоматически выполняется в задачах `default` и `development`.
+`browserSync`    | Запуск сервера. Автоматически выполняется в задачах `default` и `development`.
