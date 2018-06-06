@@ -15,19 +15,19 @@ const sourcemaps   = require('gulp-sourcemaps');
 const autoprefixer = require('gulp-autoprefixer');
 const cleanCSS     = require('gulp-clean-css');
 
-module.exports = function(options) {
+module.exports = function (options) {
 
-  let destination = path.join(options.root.build, options.bower.css.build);
+    let destination = path.join(options.root.build, options.bower.css.build);
 
-  return function() {
-    return gulp.src(options.bower.src)
-    .pipe(bower('**/*.css'))
-    .pipe(sourcemaps.init())
-    .pipe(concat(options.bower.css.output))
-    .pipe(changed({firstPass: true}))
-    .pipe(autoprefixer(options.autoprefixer))
-    .pipe(cleanCSS({format: 'keep-breaks', zIndex: false}))
-    .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(destination));
-  };
+    return function () {
+        return gulp.src(options.bower.src)
+            .pipe(bower('**/*.css'))
+            .pipe(sourcemaps.init())
+            .pipe(concat(options.bower.css.output))
+            .pipe(changed({firstPass: true}))
+            .pipe(autoprefixer(options.autoprefixer))
+            .pipe(cleanCSS({format: 'keep-breaks', zIndex: false}))
+            .pipe(sourcemaps.write('.'))
+            .pipe(gulp.dest(destination));
+    };
 };

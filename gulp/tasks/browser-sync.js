@@ -8,13 +8,13 @@
 
 const bs = require('browser-sync');
 
-module.exports = function(options) {
+module.exports = function (options) {
 
-  return function() {
-    if (bs.has(options.bs.instance)) {
-      bs.get(options.bs.instance).init(options.browserSync);
-    } else {
-      console.warn(`Browser Sync: An instance with the name '${options.bs.instance}' was not found.`);
-    }
-  };
+    return function () {
+        if (bs.has(options.bs.instance)) {
+            bs.get(options.bs.instance).init(options.browserSync);
+        } else {
+            console.warn(`Browser Sync: An instance with the name '${options.bs.instance}' was not found.`);
+        }
+    };
 };

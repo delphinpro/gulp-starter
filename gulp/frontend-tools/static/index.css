@@ -1,9 +1,3 @@
-/**
- * @author delphinpro <delphinpro@gmail .com>
- * @copyright copyright © 2017 delphinpro
- * @license licensed under the MIT license
- */
-
 :root {
   --color-main: #333e48;
   --color-pink: #ee6e73;
@@ -42,7 +36,7 @@
 @media (min-width: 992px) {
   :root {
     --font-size: 100%;
-    --container-max-width: 920px;
+    --container-max-width: 960px;
   }
 }
 
@@ -175,13 +169,19 @@ h2 > span {
 
 .files__icon { margin-right: 0.5rem; }
 
-.files__title { font-family: var(--font-stack-monospace); }
+.files__title { font-family: var(--font-stack-monospace); white-space: nowrap; }
 
 .files__desc { display: none; }
 
 a.files__item .files__title { color: var(--color-link); text-decoration: underline; }
 
 a.files__item:hover .files__title { color: var(--color-link-hover); }
+
+@media (max-width: 768px) {
+  .files__item { flex-wrap: wrap; align-items: flex-start; }
+
+  .files__desc { display: block; width: calc(100% - 30px); margin-left: 30px; margin-top: -0.7em; }
+}
 
 @media (min-width: 769px) {
   .files { display: table; }
@@ -324,5 +324,7 @@ a.files__item:hover .files__title { color: var(--color-link-hover); }
 }
 
 .markdown table td > code { border: none; }
+
+.markdown img { max-width: 100%; }
 
 .markdown { }

@@ -1,4 +1,25 @@
-$DEV_MODE: false !default;
-
+////
+/// @author     delphinpro <delphinpro@gmail.com>
+/// @copyright  copyright © 2018 delphinpro
+/// @license    licensed under the MIT license
+////
 @import "mixins/misc";
 @import "mixins/type";
+
+@mixin transition($transition, $properties...) {
+  // Свойство transition-property по-умолчанию равно значению all
+  // т.е. запись transition: 250ms ease 0s; будет
+  // эквивалентна записи transition: all 250ms ease 0s;
+  transition: $transition;
+  @if length($properties) > 0 {
+    transition-property: $properties;
+  }
+}
+
+@mixin transition-base($properties...) {
+  @if length($properties) > 0 {
+    @include transition(250ms ease 0s, $properties);
+  } @else {
+    @include transition(250ms ease 0s);
+  }
+}

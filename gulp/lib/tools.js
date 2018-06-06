@@ -7,10 +7,10 @@
  */
 
 module.exports = {
-  mask: function(extensions) {
-    if (typeof extensions === 'undefined') return '';
-    return extensions.length > 1
-        ? '**/*.{' + extensions + '}'
-        : '**/*.' + extensions + '';
-  },
+    mask: function (extensions) {
+        if (typeof extensions === 'undefined') return '';
+        return extensions.length > 1
+            ? '**/*.{' + extensions + '}'
+            : '**/*.' + extensions + '';
+    },
 };

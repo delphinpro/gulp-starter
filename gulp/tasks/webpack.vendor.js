@@ -12,15 +12,15 @@ const notify = require('../lib/handleErrors');
 const gulp          = require('gulp');
 const webpackStream = require('piped-webpack');
 
-module.exports = function(options) {
+module.exports = function (options) {
 
-  let dist = path.join(options.root.build, options.webpack.build);
+    let dist = path.join(options.root.build, options.webpack.build);
 
-  return function() {
-    let wpConfig = require(path.join(global.ROOT, 'vendor.webpack.config.js'));
+    return function () {
+        let wpConfig = require(path.join(global.ROOT, 'vendor.webpack.config.js'));
 
-    return gulp.src([])
-    .pipe(webpackStream(wpConfig)).on('error', notify)
-    .pipe(gulp.dest(dist));
-  };
+        return gulp.src([])
+            .pipe(webpackStream(wpConfig)).on('error', notify)
+            .pipe(gulp.dest(dist));
+    };
 };

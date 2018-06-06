@@ -9,17 +9,22 @@
 const config          = require('./gulp.config.js');
 const lazyRequireTask = require('./gulp/lib/lazyRequireTask');
 
+if (!process.env.NODE_ENV) {
+    console.warn('process.env.NODE_ENV undefined! Default set as \'production\'!');
+    process.env.NODE_ENV = 'production';
+}
+
 global.ROOT        = __dirname;
-global.production  = process.env.NODE_ENV === 'production';
-global.development = !global.production;
+global.development = process.env.NODE_ENV !== 'production';
+console.warn('DEVELOPMENT MODE:', global.development ? 'ON' : 'OFF');
 
 lazyRequireTask('default', 'scenario', {
-  tasks       : config.defaultTasks.concat([['watch', 'browserSync']]),
-  instanceName: config.bs.instance,
+    tasks       : config.defaultTasks.concat([['watch', 'browserSync']]),
+    instanceName: config.bs.instance,
 });
 lazyRequireTask('development', 'scenario', {
-  tasks       : config.shortListTasks.concat([['watch', 'browserSync']]),
-  instanceName: config.bs.instance,
+    tasks       : config.shortListTasks.concat([['watch', 'browserSync']]),
+    instanceName: config.bs.instance,
 });
 lazyRequireTask('build', 'scenario', {tasks: config.defaultTasks});
 lazyRequireTask('bower', 'scenario', {tasks: [['bower:js', 'bower:css']]});

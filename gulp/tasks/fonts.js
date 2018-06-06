@@ -12,29 +12,29 @@ const gulp    = require('gulp');
 const changed = require('gulp-changed');
 const tools   = require('../lib/tools');
 
-module.exports = function(options) {
+module.exports = function (options) {
 
-  let src   = path.join(options.root.src, options.fonts.src, tools.mask(options.fonts.extensions));
-  let build = path.join(options.root.build, options.fonts.build);
+    let src   = path.join(options.root.src, options.fonts.src, tools.mask(options.fonts.extensions));
+    let build = path.join(options.root.build, options.fonts.build);
 
-  return function() {
-    let bsHasInstance = bs.has(options.bs.instance);
-    let bsInstance;
+    return function () {
+        let bsHasInstance = global.development && bs.has(options.bs.instance);
+        let bsInstance;
 
-    if (bsHasInstance) {
-      bsInstance = bs.get(options.bs.instance);
-    }
+        if (bsHasInstance) {
+            bsInstance = bs.get(options.bs.instance);
+        }
 
-    let pipeline = gulp.src([src])
-    .pipe(changed(build))
-    .pipe(gulp.dest(build));
+        let pipeline = gulp.src([src])
+            .pipe(changed(build))
+            .pipe(gulp.dest(build));
 
-    if (bsHasInstance) {
-      pipeline = pipeline.on('end', function() {
-        bsInstance.reload();
-      });
-    }
+        if (bsHasInstance) {
+            pipeline = pipeline.on('end', function () {
+                bsInstance.reload();
+            });
+        }
 
-    return pipeline;
-  };
+        return pipeline;
+    };
 };

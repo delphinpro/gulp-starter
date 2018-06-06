@@ -9,15 +9,21 @@
 const gulp = require('gulp');
 const path = require('path');
 
-module.exports = function(taskName, taskFile, options, args) {
-  options          = options || {};
-  options.taskName = taskName;
+/**
+ * @param taskName Название задачи
+ * @param taskFile Имя файла с задачей, без расширения .js
+ * @param options  Основные настройки задачи. Чаще всего глобальный объект настроек, кроме задач-сценариев
+ * @param args     Дополнительные параметры для задачи, если требуется
+ */
+module.exports = function (taskName, taskFile, options, args) {
+    options          = options || {};
+    options.taskName = taskName;
 
-  taskFile = path.resolve(`./gulp/tasks/${taskFile}.js`);
+    taskFile = path.resolve(`./gulp/tasks/${taskFile}.js`);
 
-  gulp.task(taskName, function(cb) {
-    let task = require(taskFile).call(this, options, args);
+    gulp.task(taskName, function (cb) {
+        let task = require(taskFile).call(this, options, args);
 
-    return task(cb);
-  });
+        return task(cb);
+    });
 };

@@ -16,50 +16,59 @@ const changed   = require('gulp-changed-in-place');
 const tools     = require('../lib/tools');
 const notify    = require('../lib/handleErrors');
 const functions = require('../functions.twig');
+const resolver  = require('../lib/gulp-sass-image-resolver');
 
-module.exports = function(options) {
+module.exports = function (options) {
 
-  let exclude    = path.normalize('!**/{' + options.twig.excludeFolders.join(',') + '}/**');
-  let extensions = options.twig.extensions.filter(item => item !== 'json');
+    let exclude    = path.normalize('!**/{' + options.twig.excludeFolders.join(',') + '}/**');
+    let extensions = options.twig.extensions.filter(item => item !== 'json');
 
-  let src   = [
-    path.join(options.root.src, options.twig.src, tools.mask(extensions)),
-    exclude,
-  ];
-  let build = path.join(options.root.build, options.twig.build);
+    let src   = [
+        path.join(options.root.src, options.twig.src, tools.mask(extensions)),
+        exclude,
+    ];
+    let build = path.join(options.root.build, options.twig.build);
 
-  function getData() {
-    let dataPath = path.resolve(options.root.src, options.twig.dataFile);
-    return JSON.parse(fs.readFileSync(dataPath, 'utf8'));
-  }
-
-  return function() {
-    let bsHasInstance = bs.has(options.bs.instance);
-    let bsInstance, interval;
-
-    if (bsHasInstance) {
-      bsInstance = bs.get(options.bs.instance);
-      interval   = setInterval(function() {
-        bsInstance.notify('<span style="color:red">HTML is compiles...</span>', 2000);
-      }, 1000);
+    function getData() {
+        let dataPath = path.resolve(options.root.src, options.twig.dataFile);
+        let data     = {
+            system: {
+                development: global.development,
+                options: options,
+            },
+            ...JSON.parse(fs.readFileSync(dataPath, 'utf8')),
+        };
+        return data;
     }
 
-    let pipeline = gulp.src(src)
-    .pipe(data(getData)).on('error', notify)
-    .pipe(twig({
-      base     : [path.join(options.root.src, options.twig.src)],
-      functions: functions,
-    })).on('error', notify)
-    .pipe(changed({firstPass: true}))
-    .pipe(gulp.dest(build));
+    return function () {
+        let bsHasInstance = global.development && bs.has(options.bs.instance);
+        let bsInstance, interval;
 
-    if (bsHasInstance) {
-      pipeline = pipeline.on('end', function() {
-        clearInterval(interval);
-        bsInstance.reload();
-      });
-    }
+        if (bsHasInstance) {
+            bsInstance = bs.get(options.bs.instance);
+            interval   = setInterval(function () {
+                bsInstance.notify('<span style="color:red">HTML is compiles...</span>', 2000);
+            }, 1000);
+        }
 
-    return pipeline;
-  };
+        let pipeline = gulp.src(src)
+            .pipe(data(getData)).on('error', notify)
+            .pipe(twig({
+                base     : [path.join(options.root.src, options.twig.src)],
+                functions: functions,
+            })).on('error', notify)
+            .pipe(resolver(options.twig.resolver))
+            .pipe(changed({firstPass: true}))
+            .pipe(gulp.dest(build));
+
+        if (bsHasInstance) {
+            pipeline = pipeline.on('end', function () {
+                clearInterval(interval);
+                bsInstance.reload();
+            });
+        }
+
+        return pipeline;
+    };
 };

@@ -8,17 +8,17 @@
 
 const gulpSequence = require('gulp-sequence');
 
-module.exports = function(params) {
-  return function(done) {
+module.exports = function (params) {
+    return function (done) {
 
-    if (params.taskName === 'default' || params.taskName === 'development') {
-      require('browser-sync').create(params.instanceName);
-    }
+        if (params.taskName === 'default' || params.taskName === 'development') {
+            require('browser-sync').create(params.instanceName);
+        }
 
-    let taskList = params.tasks.concat(done);
+        let taskList = params.tasks.concat(done);
 
-    console.info(`${params.taskName.toUpperCase()} -> ${JSON.stringify(params.tasks)}`);
+        console.info(`${params.taskName.toUpperCase()} -> ${JSON.stringify(params.tasks)}`);
 
-    gulpSequence.apply(null, taskList);
-  };
+        gulpSequence.apply(null, taskList);
+    };
 };

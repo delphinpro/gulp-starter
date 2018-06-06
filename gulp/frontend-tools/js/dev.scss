@@ -11,7 +11,9 @@ $dev-grid-show-label: true !default;
 $dev-grid-guides-color: rgba(#4affff, 0.6) !default;
 $MAX_INT32: 2147483647;
 
-@import "../../../source/sass/config/grid-system";
+@import "../../../source/sass/rhythm.cfg";
+@import "../../../bower_components/rhythm/source/mixins/rhythm";
+@import "../../../source/sass/grid.cfg";
 @import "../../../bower_components/bs-grid-system/source/scss/mixins";
 
 $grid-columns: 12 !default;

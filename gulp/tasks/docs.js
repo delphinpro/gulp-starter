@@ -11,24 +11,24 @@ const path    = require('path');
 const gulp    = require('gulp');
 const changed = require('gulp-changed');
 
-module.exports = function(options) {
-  const paths = {
-    src : [
-      'README.md',
-      'docs/**',
-    ],
-    dest: path.join(options.root.build, 'docs'),
-  };
+module.exports = function (options) {
+    const paths = {
+        src : [
+            'README.md',
+            'docs/**',
+        ],
+        dest: path.join(options.root.build, 'docs'),
+    };
 
-  return function(done) {
+    return function (done) {
 
-    gulp.src(paths.src)
-    .pipe(changed(paths.dest))
-    .pipe(gulp.dest(paths.dest))
-    .on('end', function() {
-      if (bs.has(options.bs.instance)) bs.get(options.bs.instance).reload();
-      done();
-    })
-    ;
-  };
+        gulp.src(paths.src)
+            .pipe(changed(paths.dest))
+            .pipe(gulp.dest(paths.dest))
+            .on('end', function () {
+                if (bs.has(options.bs.instance)) bs.get(options.bs.instance).reload();
+                done();
+            })
+        ;
+    };
 };

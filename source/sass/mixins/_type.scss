@@ -1,22 +1,87 @@
-$root-font-size: 16px !default;
-
 @function rem($px) {
-  @return $px / $root-font-size * 1rem;
+  @return $px / $rhythm-base-font-size * 1rem;
 }
 
 @mixin letter-spacing($value) {
   letter-spacing: $value / 1000 * 1em;
 }
 
-@mixin vertical-rhythm-helpers() {
-  @for $i from 0 through 6 {
-    $val: str-replace(#{$i/2}, '.', '\\/');
-    .mt-#{$val} { @include margin-leader($i / 2); }
-    .mb-#{$val} { @include margin-trailer($i / 2); }
-    .pt-#{$val} { @include padding-leader($i / 2); }
-    .pb-#{$val} { @include padding-trailer($i / 2); }
+@mixin __($entity, $value) {
+  @if $entity == mt {@include margin-leader($value);}
+  @if $entity == mb {@include margin-trailer($value);}
+  @if $entity == pt {@include padding-leader($value);}
+  @if $entity == pb {@include padding-trailer($value);}
+}
 
-    .st-#{$val} { @include apply-side-rhythm-border(top, 1px, $i / 2); }
-    .sb-#{$val} { @include apply-side-rhythm-border(bottom, 1px, $i / 2); }
+@mixin vertical-rhythm-helpers($lines: 3, $parts: (0, 0.25, 0.5, 0.75)) {
+  @each $bpName, $px in $grid-breakpoints {
+    $bp: if($bpName == xs, '', '#{$bpName}-');
+
+    @include media-breakpoint-up($bpName) {
+      $entities: (mt, mb, pt, pb);
+      @each $entity in $entities {
+        .#{$entity} { /**/
+          @for $i from 0 through $lines {
+            @each $part in $parts {
+              $value: #{str-replace(#{$i + $part}, '.', '\\.')};
+
+              //@if ($part != 0 and $i == 0) {
+              //  $value: '#{$value}';
+              //}
+
+              &-#{$bp}#{$value} { @include __($entity, $i + $part); }
+            }
+          }
+        }
+      }
+    }
   }
+}
+
+//noinspection CssOverwrittenProperties
+@mixin font($font-size, $line-height: null) {
+  @if ($line-height == null) {
+    font-size: if($rhythm-rem-with-px-fallback, $font-size, null);
+    font-size: convert-length($font-size, rem);
+  } @else {
+    @if (type_of($line-height) == 'number') {
+      $unit: unit($line-height);
+      @if ($unit == '') {
+        @include adjust-font-size-to($font-size, $line-height);
+      } @else {
+        font-size: if($rhythm-rem-with-px-fallback, $font-size, null);
+        font-size: convert-length($font-size, rem);
+      }
+      @if ($unit == 'px') {
+        line-height: if($rhythm-rem-with-px-fallback, $line-height, null);
+        line-height: (convert-length($line-height, em, $font-size) / 1em);
+      }
+      @if ($unit == 'em') {
+        line-height: if($rhythm-rem-with-px-fallback, convert-length($line-height, px, $font-size), null);
+        line-height: $line-height;
+      }
+      @if ($unit == 'rem') {
+        line-height: if($rhythm-rem-with-px-fallback, convert-length($line-height, px, $font-size), null);
+        line-height: $line-height;
+      }
+    } @else {
+      @warn 'Invalid type of $line-height param: #{type_of($line-height)}. Number expected.';
+    }
+  }
+}
+
+@mixin zero-first-last-margins() {
+  &:first-child { margin-top: 0; }
+  &:last-child { margin-bottom: 0; }
+}
+
+@mixin type-margin() {
+  @include margin-trailer(1);
+  &:last-child { margin-bottom: 0; }
+}
+
+@mixin reset-list() {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }

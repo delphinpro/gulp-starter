@@ -19,40 +19,47 @@ const _localDomain    = '';
 const _browsers       = ['chrome'];
 const _reloadDebounce = 300;
 const root            = {
-  src      : 'source',
-  build    : 'public_html',
-  dist     : 'dist',
-  staticDir: 'design',
+    src      : 'source',
+    build    : 'public_html',
+    dist     : 'dist',
+    staticDir: 'design',
 };
 
 let config = {
-  root,
-  sprite: {},
+    root,
+    sprite: {},
 };
 
 /*==
  *== Task lists
  *== ===================================================================== ==*/
 
-config.watchableTasks = ['twig', 'webpack', 'scss', 'images', 'fonts', 'copy'];
-
-config.defaultTasks = [
-  ['clean'],
-  [
-    'docs',
-    'frontend-tools',
-    'copy',
-    'bower'
-  ],
-  ['sprite'],
-  ['webpack:vendor'],
-  [
+config.watchableTasks = [
     'twig',
     'webpack',
     'scss',
     'images',
     'fonts',
-  ],
+    'copy',
+];
+
+config.defaultTasks = [
+    ['clean'],
+    [
+        'docs',
+        'frontend-tools',
+        'copy',
+        'bower',
+    ],
+    ['sprite'],
+    ['webpack:vendor'],
+    [
+        'twig',
+        'webpack',
+        'scss',
+        'images',
+        'fonts',
+    ],
 ];
 
 config.shortListTasks = [['twig', 'webpack', 'scss']];
@@ -62,14 +69,16 @@ config.shortListTasks = [['twig', 'webpack', 'scss']];
  *== ===================================================================== ==*/
 
 config.scss = {
-  src       : 'sass',
-  build     : path.join(root.staticDir, 'css'),
-  sass      : {outputStyle: 'compressed'},
-  extensions: ['scss'],
-  resolver  : {
-    source     : '/' + root.staticDir + '/images/',
-    replacement: '../images/',
-  },
+    src       : 'sass',
+    build     : path.join(root.staticDir, 'css'),
+    sass      : {
+        outputStyle: 'compressed', // In production mode. In development mode always is 'nested'
+    },
+    extensions: ['scss'],
+    resolver  : {
+        source     : '/source/',
+        replacement: '../',
+    },
 };
 
 /*==
@@ -77,7 +86,7 @@ config.scss = {
  *== ===================================================================== ==*/
 
 config.autoprefixer = {
-  browsers: ['last 3 versions', 'ie 11'],
+    browsers: ['last 3 versions', 'ie 11'],
 };
 
 /*==
@@ -85,7 +94,7 @@ config.autoprefixer = {
  *== ===================================================================== ==*/
 
 config.javascript = {
-  processor: 'webpack',
+    processor: 'webpack',
 };
 
 /*==
@@ -93,10 +102,10 @@ config.javascript = {
  *== ===================================================================== ==*/
 
 config.webpack = {
-  src       : 'js',
-  build     : path.join(root.staticDir, 'js'),
-  entryExt  : 'js',
-  extensions: ['js', 'scss', 'css', 'vue'],
+    src       : 'js',
+    build     : path.join(root.staticDir, 'js'),
+    entryExt  : 'js',
+    extensions: ['js', 'scss', 'css', 'vue'],
 };
 
 /*==
@@ -104,15 +113,15 @@ config.webpack = {
  *== ===================================================================== ==*/
 
 config.bower = {
-  src: 'bower.json',
-  js : {
-    build : path.join(root.staticDir, 'js'),
-    output: 'bower.vendor.js',
-  },
-  css: {
-    build : path.join(root.staticDir, 'css'),
-    output: 'vendor.css',
-  },
+    src: 'bower.json',
+    js : {
+        build : path.join(root.staticDir, 'js'),
+        output: 'bower.vendor.js',
+    },
+    css: {
+        build : path.join(root.staticDir, 'css'),
+        output: 'vendor.css',
+    },
 };
 
 /*==
@@ -120,11 +129,15 @@ config.bower = {
  *== ===================================================================== ==*/
 
 config.twig = {
-  src           : 'twig',
-  build         : '',
-  dataFile      : 'data.json',
-  extensions    : ['twig', 'html', 'json'],
-  excludeFolders: ['layouts', 'parts'],
+    src           : 'twig',
+    build         : '',
+    dataFile      : 'data.json',
+    extensions    : ['twig', 'html', 'json'],
+    excludeFolders: ['layouts', 'parts'],
+    resolver      : {
+        source     : '/source/',
+        replacement: '/',
+    },
 };
 
 /*==
@@ -132,9 +145,9 @@ config.twig = {
  *== ===================================================================== ==*/
 
 config.images = {
-  src       : 'images',
-  build     : path.join(root.staticDir, 'images'),
-  extensions: ['jpg', 'png', 'svg', 'gif'],
+    src       : 'images',
+    build     : path.join(root.staticDir, 'images'),
+    extensions: ['jpg', 'png', 'svg', 'gif'],
 };
 
 /*==
@@ -142,8 +155,8 @@ config.images = {
  *== ===================================================================== ==*/
 
 config.sprite.svg = {
-  src : 'source/sprites/svg/*.svg',
-  dest: '../svg-sprite.svg',
+    src : 'source/sprites/svg/*.svg',
+    dest: '../svg-sprite.svg',
 };
 
 /*==
@@ -151,28 +164,41 @@ config.sprite.svg = {
  *== ===================================================================== ==*/
 
 config.fonts = {
-  src       : 'fonts',
-  build     : path.join(root.staticDir, 'fonts'),
-  extensions: ['woff2', 'woff', 'eot', 'ttf', 'svg'],
+    src       : 'fonts',
+    build     : path.join(root.staticDir, 'fonts'),
+    extensions: ['woff2', 'woff', 'eot', 'ttf', 'svg'],
 };
 
 /*==
  *== Cleaning settings
- *== Директории без оконечных слешей, слеш прямой
- *== Одиночные файлы
+ *==
+ *== root    Начальная (корневая) директория для удаления файлов и папок
+ *==         По умолчанию равна config.root.build
+ *== exclude Директории без оконечных слешей, слеш прямой, от root
+ *==         Одиночные файлы
+ *==
+ *== Можно задавать массив объектов для очистки нескольких директорий
+ *==         [{root:'/dir1/',exclude:[]}, {root:'/docs/',exclude:[]}]
  *== ===================================================================== ==*/
 
-config.cleaning = {
-  exclude: [],
-};
+config.cleaning = [
+    {
+        root   : '/design/',
+        exclude: [],
+    },
+    {
+        root   : '/docs/',
+        exclude: [],
+    },
+];
 
 /*==
  *== Copy settings
  *== ===================================================================== ==*/
 
 config.copy = {
-  src       : ['assets/**'],
-  extensions: ['php', 'ico', 'jpg', 'png', 'txt', 'htaccess'],
+    src       : ['assets/**'],
+    extensions: ['php', 'ico', 'jpg', 'png', 'txt', 'htaccess'],
 };
 
 /*==
@@ -181,32 +207,32 @@ config.copy = {
  *== ===================================================================== ==*/
 
 config.browserSync = {
-  watchOptions   : {ignoreInitial: true},
-  // files          : ['' + root.build + '**/*.*', '!' + root.build + '**/*.map'],
-  browser        : _browsers,
-  notify         : true,
-  startPath      : '/',
-  proxy          : _localDomain,
-  port           : _serverPort,
-  reloadDebounce : _reloadDebounce,
-  reloadOnRestart: true,
-  ghostMode      : {
-    clicks: true,
-    forms : true,
-    scroll: true,
-  },
+    watchOptions   : {ignoreInitial: true},
+    // files          : ['' + root.build + '**/*.*', '!' + root.build + '**/*.map'],
+    browser        : _browsers,
+    notify         : true,
+    startPath      : '/',
+    proxy          : _localDomain,
+    port           : _serverPort,
+    reloadDebounce : _reloadDebounce,
+    reloadOnRestart: true,
+    ghostMode      : {
+        clicks: true,
+        forms : true,
+        scroll: true,
+    },
 };
 
 config.bs = {
-  instance: 'delphinpro',
+    instance: 'delphinpro',
 };
 
 if (!_useProxy) {
-  config.browserSync.proxy  = null;
-  config.browserSync.server = {
-    baseDir  : root.build,
-    directory: true,
-  };
+    config.browserSync.proxy  = null;
+    config.browserSync.server = {
+        baseDir  : root.build,
+        directory: true,
+    };
 }
 
 module.exports = config;
