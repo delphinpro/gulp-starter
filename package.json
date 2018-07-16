@@ -1,12 +1,14 @@
 {
   "name": "gulp-starter",
-  "version": "0.2.0",
+  "version": "0.3.1",
   "description": "Configuration template",
   "main": "gulpfile.js",
   "scripts": {
     "start": "cross-env NODE_ENV=development gulp default",
     "development": "cross-env NODE_ENV=development gulp development",
-    "build": "cross-env NODE_ENV=production gulp build"
+    "build": "cross-env NODE_ENV=production gulp build",
+    "stats:make": "cross-env NODE_ENV=production webpack-cli --profile --json --entry ./source/js/main.js > stats.json",
+    "stats:display": "cross-env NODE_ENV=production ./node_modules/.bin/webpack-bundle-analyzer ./stats.json"
   },
   "repository": {
     "type": "git",
@@ -69,7 +71,8 @@
     "uglifyjs-webpack-plugin": "^1.2.5",
     "vue-loader": "^15.2.0",
     "vue-template-compiler": "^2.4.2",
-    "webpack": "^4.8.3"
+    "webpack": "^4.8.3",
+    "webpack-bundle-analyzer": "^2.13.1"
   },
   "dependencies": { },
   "webpack": {
