@@ -1,9 +1,8 @@
-/**
- * Copy other files
- *
- * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2017 delphinpro
- * @license     licensed under the MIT license
+/*!
+ * gulp-starter
+ * Task. Copy anything files
+ * (c) 2017-2019 delphinpro <delphinpro@gmail.com>
+ * licensed under the MIT license
  */
 
 const path    = require('path');
@@ -11,36 +10,50 @@ const bs      = require('browser-sync');
 const gulp    = require('gulp');
 const changed = require('gulp-changed');
 
-let timeout;
+const config      = require('../../gulp.config');
+const DEVELOPMENT = require('../lib/checkMode').isDevelopment();
 
-module.exports = function (options) {
+function copyFiles(conf) {
+    return new Promise((resolve, reject) => {
 
-    let source = options.copy.src.map(function (item) {
-        return path.join(options.root.src, item);
+        if (!('src' in conf)) reject('Invalid config for "copy" task: undefined "src" param');
+        if (!('dest' in conf)) conf.dest = '';
+        if ('extensions' in conf) { }
+
+        let source = path.join(config.root.main, conf.src);
+        let dest   = path.join(config.root.main, config.root.build, conf.dest);
+
+        gulp.src(source)
+
+            .on('error', err => reject(err))
+
+            .on('end', () => resolve())
+
+            .pipe(changed(config.root.build))
+            .pipe(gulp.dest(dest));
+
     });
+}
 
-    return function () {
-        let bsHasInstance = global.development && bs.has(options.bs.instance);
-        let bsInstance;
+module.exports = function () {
 
-        if (bsHasInstance) {
-            bsInstance = bs.get(options.bs.instance);
-        }
-
-        let pipeline = gulp.src(source)
-            .pipe(changed(options.root.build))
-            .pipe(gulp.dest(options.root.build));
+    return function (done) {
+        let bsHasInstance = DEVELOPMENT && bs.has(config.browserSync.instanceName);
 
         if (bsHasInstance) {
-            pipeline = pipeline.on('end', function () {
-                bsInstance.notify('<span style="color:red">Copy files...</span>', 2000);
-                clearTimeout(timeout);
-                timeout = setTimeout(function () {
-                    bsInstance.reload();
-                }, 1000);
-            });
+            bs.get(config.browserSync.instanceName)
+                .notify('<span style="color:red">Copy files...</span>', 20000);
         }
 
-        return pipeline;
+        let copies = [];
+
+        config.copy.forEach(item => {
+            copies.push(copyFiles(item, config));
+        });
+
+        Promise
+            .all(copies)
+            .then(() => done())
+            .catch(err => done(err));
     };
 };

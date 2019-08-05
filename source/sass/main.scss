@@ -4,6 +4,54 @@
  * Main styles
  *
  * @author     delphinpro <delphinpro@gmail.com>
- * @copyright  copyright © 2018 delphinpro
+ * @copyright  copyright © 2019 delphinpro
  * @license    licensed under the MIT license
  */
+
+//noinspection CssInvalidFunction
+$NODE_ENV: nodeEnv();
+$DEV_MODE: $NODE_ENV != production;
+$TEST: false;
+
+//==
+//== Config & Mixins
+//== ======================================= ==//
+
+//==
+//== Base
+//== ======================================= ==//
+
+//==
+//== 3rd party
+//== ======================================= ==//
+
+//==
+//== Blocks
+//== ======================================= ==//
+
+//==
+//== Helpers and other
+//== ======================================= ==//
+
+/*==
+ *== TEST
+ *== ======================================= ==*/
+
+@if $TEST {
+  //$MAX_INT32: 2147483647;
+
+  .h {
+    height: 500px;
+    background: #fff;
+  }
+
+  .hh {
+    height: 500px;
+    background: #ccc;
+  }
+
+  /*==
+   *== TEMP
+   *== ======================================= ==*/
+
+}

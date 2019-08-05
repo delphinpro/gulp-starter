@@ -1,40 +1,33 @@
-/**
- * Gulp-task. Build fonts.
- *
- * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2015-2017 delphinpro
- * @license     licensed under the MIT license
+/*!
+ * gulp-starter
+ * Task. Copy fonts
+ * (c) 2015-2019 delphinpro <delphinpro@gmail.com>
+ * licensed under the MIT license
  */
 
-const path    = require('path');
-const bs      = require('browser-sync');
-const gulp    = require('gulp');
-const changed = require('gulp-changed');
-const tools   = require('../lib/tools');
+const bs     = require('browser-sync');
+const gulp   = require('gulp');
+const tools  = require('../lib/tools');
+const config = require('../../gulp.config');
 
-module.exports = function (options) {
+const DEVELOPMENT = require('../lib/checkMode').isDevelopment();
 
-    let src   = path.join(options.root.src, options.fonts.src, tools.mask(options.fonts.extensions));
-    let build = path.join(options.root.build, options.fonts.build);
+module.exports = function () {
 
-    return function () {
-        let bsHasInstance = global.development && bs.has(options.bs.instance);
-        let bsInstance;
+    const {source, build} = tools.makePaths(config.fonts);
 
-        if (bsHasInstance) {
-            bsInstance = bs.get(options.bs.instance);
-        }
+    function fonts(done) {
+        gulp.src([source], {since: gulp.lastRun(fonts)})
+            .pipe(gulp.dest(build))
 
-        let pipeline = gulp.src([src])
-            .pipe(changed(build))
-            .pipe(gulp.dest(build));
+            .on('end', function () {
+                if (DEVELOPMENT && bs.has(config.browserSync.instanceName)) {
+                    bs.get(config.browserSync.instanceName).reload();
+                }
 
-        if (bsHasInstance) {
-            pipeline = pipeline.on('end', function () {
-                bsInstance.reload();
+                done();
             });
-        }
+    }
 
-        return pipeline;
-    };
+    return fonts;
 };

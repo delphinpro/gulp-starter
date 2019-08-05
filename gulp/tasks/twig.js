@@ -1,74 +1,70 @@
-/**
- * Gulp-task. Compile twig templates.
- *
- * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2015-2017 delphinpro
- * @license     licensed under the MIT license
+/*!
+ * gulp-starter
+ * Task. Compile twig templates
+ * (c) 2015-2019 delphinpro <delphinpro@gmail.com>
+ * licensed under the MIT license
  */
 
-const fs        = require('fs');
-const path      = require('path');
-const bs        = require('browser-sync');
-const gulp      = require('gulp');
-const data      = require('gulp-data');
-const twig      = require('gulp-twig');
-const changed   = require('gulp-changed-in-place');
-const tools     = require('../lib/tools');
-const notify    = require('../lib/handleErrors');
-const functions = require('../functions.twig');
-const resolver  = require('../lib/gulp-sass-image-resolver');
+const path = require('path');
 
-module.exports = function (options) {
+const bs = require('browser-sync');
 
-    let exclude    = path.normalize('!**/{' + options.twig.excludeFolders.join(',') + '}/**');
-    let extensions = options.twig.extensions.filter(item => item !== 'json');
+const gulp    = require('gulp');
+const data    = require('gulp-data');
+const twig    = require('gulp-twig');
+const changed = require('gulp-changed-in-place');
 
-    let src   = [
-        path.join(options.root.src, options.twig.src, tools.mask(extensions)),
-        exclude,
-    ];
-    let build = path.join(options.root.build, options.twig.build);
+const config      = require('../../gulp.config');
+const tools       = require('../lib/tools');
+const notifyError = require('../lib/notifyError');
+const resolveUrl  = require('../lib/resolveUrl');
+const bsNotify    = require('../lib/tools').bsNotify;
+const DEVELOPMENT = require('../lib/checkMode').isDevelopment();
 
-    function getData() {
-        let dataPath = path.resolve(options.root.src, options.twig.dataFile);
-        let data     = {
-            system: {
-                development: global.development,
-                options: options,
-            },
-            ...JSON.parse(fs.readFileSync(dataPath, 'utf8')),
-        };
-        return data;
-    }
+const { functions, loadData, extendFunction } = require('../lib/functions.twig');
 
-    return function () {
-        let bsHasInstance = global.development && bs.has(options.bs.instance);
-        let bsInstance, interval;
+module.exports = function () {
 
-        if (bsHasInstance) {
-            bsInstance = bs.get(options.bs.instance);
-            interval   = setInterval(function () {
-                bsInstance.notify('<span style="color:red">HTML is compiles...</span>', 2000);
-            }, 1000);
-        }
-
-        let pipeline = gulp.src(src)
-            .pipe(data(getData)).on('error', notify)
-            .pipe(twig({
-                base     : [path.join(options.root.src, options.twig.src)],
-                functions: functions,
-            })).on('error', notify)
-            .pipe(resolver(options.twig.resolver))
-            .pipe(changed({firstPass: true}))
-            .pipe(gulp.dest(build));
-
-        if (bsHasInstance) {
-            pipeline = pipeline.on('end', function () {
-                clearInterval(interval);
-                bsInstance.reload();
-            });
-        }
-
-        return pipeline;
+    let taskDef = {
+        ...config.twig,
+        extensions: config.twig.extensions.filter(item => item !== 'json'),
     };
+
+    let { source, build } = tools.makePaths(taskDef);
+    let twigOptionsBase   = path.join(config.root.src, config.twig.src);
+    let exclude           = path.normalize('!**/{' + config.twig.excludeFolders.join(',') + '}/**');
+
+    const taskTwig = function (done) {
+
+        bsNotify('<span style="color:red">HTML is compiles...</span>', 15000);
+
+        gulp.src([source, exclude], { since: gulp.lastRun(taskTwig) })
+
+            .pipe(data(loadData))
+            .on('error', err => notifyError(err, 'Twig compile error', done))
+
+            .pipe(twig({
+                base  : twigOptionsBase,
+                functions,
+                extend: extendFunction,
+            }))
+            .on('error', err => notifyError(err, 'Twig compile error', done))
+
+            .pipe(resolveUrl(config.twig.resolveUrl))
+            .on('error', err => notifyError(err, 'Twig compile error', done))
+
+            .pipe(changed({ firstPass: true }))
+
+            .pipe(gulp.dest(build))
+
+            .on('end', function () {
+                if (DEVELOPMENT && bs.has(config.browserSync.instanceName)) {
+                    bs.get(config.browserSync.instanceName).reload();
+                }
+
+                done();
+            });
+    };
+
+    return taskTwig;
 };

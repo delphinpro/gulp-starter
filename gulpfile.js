@@ -1,52 +1,87 @@
-/**
+/*!
+ * gulp-starter
  * Gulpfile
- *
- * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2017 delphinpro
- * @license     licensed under the MIT license
+ * (c) 2017-2019 delphinpro <delphinpro@gmail.com>
+ * licensed under the MIT license
  */
 
-const config          = require('./gulp.config.js');
-const lazyRequireTask = require('./gulp/lib/lazyRequireTask');
+let nodeEnvWarn = false;
 
 if (!process.env.NODE_ENV) {
-    console.warn('process.env.NODE_ENV undefined! Default set as \'production\'!');
     process.env.NODE_ENV = 'production';
+    nodeEnvWarn          = true;
 }
 
-global.ROOT        = __dirname;
-global.development = process.env.NODE_ENV !== 'production';
-console.warn('DEVELOPMENT MODE:', global.development ? 'ON' : 'OFF');
+const gulp            = require('gulp');
+const tools           = require('./gulp/lib/tools');
+const lazyRequireTask = require('./gulp/lib/lazyRequireTask');
+const DEVELOPMENT     = require('./gulp/lib/checkMode').isDevelopment();
+const IS_DIST         = require('./gulp/lib/checkMode').checkMode('dist');
 
-lazyRequireTask('default', 'scenario', {
-    tasks       : config.defaultTasks.concat([['watch', 'browserSync']]),
-    instanceName: config.bs.instance,
+tools.welcomeMessage();
+if (nodeEnvWarn) tools.danger('  process.env.NODE_ENV undefined! Default set as \'production\'!');
+tools[(DEVELOPMENT ? 'warn' : 'success')](`  DEVELOPMENT MODE: ${DEVELOPMENT ? 'ON' : 'OFF'}` + '\n');
+
+/*==
+ *== Task: default
+ *== ======================================= ==*/
+
+gulp.task('default', function (done) {
+
+    gulp.series(
+        gulp.parallel(
+            'copy',
+        ),
+        gulp.parallel(
+            'twig',
+            'scss',
+            'javascript',
+            'fonts',
+            'images',
+        ),
+        gulp.parallel(
+            'watch',
+            'serve',
+        ),
+    )(done);
+
 });
-lazyRequireTask('development', 'scenario', {
-    tasks       : config.shortListTasks.concat([['watch', 'browserSync']]),
-    instanceName: config.bs.instance,
+
+/*==
+ *== Task: build
+ *== ======================================= ==*/
+
+gulp.task('build', function (done) {
+    tools.info(`Task build:${process.env.NODE_ENV}`);
+
+    gulp.series(
+        gulp.parallel(
+            'copy',
+        ),
+        gulp.parallel(
+            'twig',
+            'scss',
+            'javascript',
+            'fonts',
+            'images',
+        ),
+        IS_DIST ? 'dist' : 'nop',
+    )(done);
 });
-lazyRequireTask('build', 'scenario', {tasks: config.defaultTasks});
-lazyRequireTask('bower', 'scenario', {tasks: [['bower:js', 'bower:css']]});
-lazyRequireTask('frontend-tools', 'scenario', {tasks: [['frontend-tools:js', 'frontend-tools:misc']]});
-lazyRequireTask('clean', 'clean', config);
-lazyRequireTask('clean:preview', 'clean', config, {preview: true});
-lazyRequireTask('copy', 'copy', config);
 
-lazyRequireTask('scss', 'scss', config);
-lazyRequireTask('twig', 'twig', config);
-lazyRequireTask('images', 'images', config);
-lazyRequireTask('fonts', 'fonts', config);
-lazyRequireTask('sprite', 'sprite', config);
-lazyRequireTask('webpack', 'webpack', config);
-lazyRequireTask('webpack:vendor', 'webpack.vendor', config);
-lazyRequireTask('docs', 'docs', config);
+/*==
+ *== Other tasks
+ *== ======================================= ==*/
 
-lazyRequireTask('bower:js', 'bower.js', config);
-lazyRequireTask('bower:css', 'bower.css', config);
-
-lazyRequireTask('frontend-tools:js', 'frontend-tools.js', config);
-lazyRequireTask('frontend-tools:misc', 'frontend-tools.misc', config);
-
-lazyRequireTask('watch', 'watch', config);
-lazyRequireTask('browserSync', 'browser-sync', config);
+lazyRequireTask('dist');
+lazyRequireTask('copy');
+lazyRequireTask('clean');
+lazyRequireTask('clean:preview', 'clean', {preview: true});
+lazyRequireTask('scss');
+lazyRequireTask('twig');
+lazyRequireTask('images');
+lazyRequireTask('fonts');
+lazyRequireTask('javascript');
+lazyRequireTask('watch');
+lazyRequireTask('serve');
+gulp.task('nop', done => done());

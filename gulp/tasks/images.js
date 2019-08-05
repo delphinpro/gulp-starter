@@ -1,32 +1,34 @@
-/**
- * Gulp-task. Optimize images.
- *
- * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2015-2017 delphinpro
- * @license     licensed under the MIT license
+/*!
+ * gulp-starter
+ * Task. Optimize images
+ * (c) 2015-2019 delphinpro <delphinpro@gmail.com>
+ * licensed under the MIT license
  */
 
-const path           = require('path');
 const bs             = require('browser-sync');
 const gulp           = require('gulp');
 const changed        = require('gulp-changed');
 const imagesOptimize = require('gulp-imagemin');
 const tools          = require('../lib/tools');
+const config         = require('../../gulp.config');
 
-module.exports = function (options) {
+const DEVELOPMENT = require('../lib/checkMode').isDevelopment();
 
-    let src   = path.join(options.root.src, options.images.src, tools.mask(options.images.extensions));
-    let build = path.join(options.root.build, options.images.build);
+module.exports = function () {
 
-    return function () {
-        let bsHasInstance = global.development && bs.has(options.bs.instance);
-        let bsInstance;
+    const {source, build} = tools.makePaths(config.images);
 
-        if (bsHasInstance) {
-            bsInstance = bs.get(options.bs.instance);
-        }
+    return function (done) {
+        gulp.src([source], {since: gulp.lastRun('images')})
 
-        let pipeline = gulp.src([src])
+            .on('end', function () {
+                if (DEVELOPMENT && bs.has(config.browserSync.instanceName)) {
+                    bs.get(config.browserSync.instanceName).reload();
+                }
+
+                done();
+            })
+
             .pipe(changed(build))
             .pipe(imagesOptimize([
                 imagesOptimize.gifsicle(),
@@ -36,14 +38,7 @@ module.exports = function (options) {
                 imagesOptimize.optipng(),
                 imagesOptimize.svgo(),
             ]))
-            .pipe(gulp.dest(build));
-
-        if (bsHasInstance) {
-            pipeline = pipeline.on('end', function () {
-                bsInstance.reload();
-            });
-        }
-
-        return pipeline;
+            .pipe(gulp.dest(build))
+        ;
     };
 };

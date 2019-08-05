@@ -1,9 +1,8 @@
-/**
- * Configuration
- *
- * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2017 delphinpro
- * @license     licensed under the MIT license
+/*!
+ * gulp-starter
+ * Main configuration
+ * (c) 2017-2019 delphinpro <delphinpro@gmail.com>
+ * licensed under the MIT license
  */
 
 'use strict';

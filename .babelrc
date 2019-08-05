@@ -1,9 +1,9 @@
 {
   "presets": [
-    ["env", { "modules": false }]
+    ["@babel/preset-env", { "modules": false }]
   ],
   "plugins": [
-    "transform-object-rest-spread",
-    "transform-runtime"
+    "@babel/plugin-transform-spread",
+    ["@babel/plugin-transform-runtime", {"helpers":  false}]
   ]
 }

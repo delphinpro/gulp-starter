@@ -1,26 +1,24 @@
-/**
- * Image src resolver
- *
- * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2016 delphinpro
- * @license     licensed under the MIT license
+/*!
+ * gulp-starter
+ * Resolve url to images
+ * (c) 2016-2019 delphinpro <delphinpro@gmail.com>
+ * licensed under the MIT license
  */
 
-const gulpUtil = require('gulp-util');
-const through  = require('through2');
+const through = require('through2');
 
-const PLUGIN_NAME = 'gulp-sass-image-resolver';
+const PLUGIN_NAME = 'resolve-url ';
 
 module.exports = function (options) {
     return through.obj(function (file, enc, cb) {
+
         if (file.isNull()) {
             cb(null, file);
             return;
         }
 
         if (file.isStream()) {
-            cb(new gulpUtil.PluginError(PLUGIN_NAME,
-                'Streaming not supported'));
+            cb(new Error(PLUGIN_NAME + 'Streaming not supported'));
             return;
         }
 
@@ -38,14 +36,17 @@ module.exports = function (options) {
                         content    = content.replace(found, result);
                     }
 
-                    file.contents = new Buffer(content);
+                    file.contents = Buffer.from(content);
                 }
             }
 
             if (/\.html$/.exec(file.path) !== null) {
-                if (/src="([^"]+?)"/.exec(content) !== null) {
+                if (/src="([^"]+?)"/.exec(content) !== null
+                    || /srcset="([^"]+?)"/.exec(content) !== null
+                ) {
                     let match;
-                    const pattern = /src="([^"]+?)"/g;
+                    const pattern  = /src="([^"]+?)"/g;
+                    const pattern2 = /srcset="([^"]+?)"/g;
 
                     while ((match = pattern.exec(content)) !== null) {
                         let found  = match[1];
@@ -53,11 +54,18 @@ module.exports = function (options) {
                         content    = content.replace(found, result);
                     }
 
-                    file.contents = new Buffer(content);
+                    let src2 = new RegExp(options.source, 'g');
+                    while ((match = pattern2.exec(content)) !== null) {
+                        let found  = match[1];
+                        let result = found.replace(src2, options.replacement);
+                        content    = content.replace(found, result);
+                    }
+
+                    file.contents = Buffer.from(content);
                 }
             }
         } catch (err) {
-            this.emit('error', new PluginError(PLUGIN_NAME, err));
+            this.emit('error', new Error(PLUGIN_NAME + err.message));
         }
 
         this.push(file);

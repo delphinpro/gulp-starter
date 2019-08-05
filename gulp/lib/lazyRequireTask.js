@@ -1,29 +1,40 @@
-/**
+/*!
+ * gulp-starter
  * Lazy require task
- *
- * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2017 delphinpro
- * @license     licensed under the MIT license
+ * (c) 2017-2019 delphinpro <delphinpro@gmail.com>
+ * licensed under the MIT license
  */
 
-const gulp = require('gulp');
+const fs   = require('fs');
 const path = require('path');
+const gulp = require('gulp');
+
+const config = require('../../gulp.config');
+const tools  = require('./tools');
 
 /**
  * @param taskName Название задачи
- * @param taskFile Имя файла с задачей, без расширения .js
- * @param options  Основные настройки задачи. Чаще всего глобальный объект настроек, кроме задач-сценариев
- * @param args     Дополнительные параметры для задачи, если требуется
+ * @param fileName
+ * @param options Дополнительные параметры для задачи, если требуется
  */
-module.exports = function (taskName, taskFile, options, args) {
-    options          = options || {};
-    options.taskName = taskName;
+module.exports = function (taskName, fileName = taskName, options = {}) {
 
-    taskFile = path.resolve(`./gulp/tasks/${taskFile}.js`);
+    let taskFile = fileName.replace(/:/, '-');
+    taskFile     = path.resolve(path.join(config.root.main, 'gulp/tasks', `${taskFile}.js`));
+
+    if (!fs.existsSync(taskFile)) {
+        tools.danger(`Task error [${taskName}]: File not found: ${taskFile}`);
+        return;
+    }
+
+    let task = null;
 
     gulp.task(taskName, function (cb) {
-        let task = require(taskFile).call(this, options, args);
+        if (!task) {
+            task = require(taskFile).call(this, options);
+        }
 
         return task(cb);
     });
+
 };

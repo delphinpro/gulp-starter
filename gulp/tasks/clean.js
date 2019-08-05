@@ -1,16 +1,16 @@
-/**
- * Gulp-task. Clean build directory.
- *
- * @author      delphinpro <delphinpro@gmail.com>
- * @copyright   copyright © 2016-2017 delphinpro
- * @license     licensed under the MIT license
+/*!
+ * gulp-starter
+ * Task. Clean build directory
+ * (c) 2016-2019 delphinpro <delphinpro@gmail.com>
+ * licensed under the MIT license
  */
 
 const fs   = require('fs');
 const path = require('path');
 const del  = require('del');
 
-const conf = require('../../gulp.config.js');
+const config = require('../../gulp.config.js');
+const tools  = require('../lib/tools');
 
 function scanDir(dir) {
     let result = [];
@@ -43,70 +43,58 @@ String.prototype.startOf = function (substring) {
 
 String.prototype.shortPath = function () {
     let re = new RegExp('\\' + path.sep, 'g');
-    return this.replace(conf.root.build, '').replace(re, '/');
+    return this.replace(config.root.build, '').replace(re, '/');
 };
-
-const LINE_WIDTH = 70;
-
-const LINE_H     = '─'; // 2500
-const LINE_V     = '│'; // 2502
-const LINE_TR    = '┐'; // 2510
-const LINE_BR    = '┘'; // 2518
-const LINE_TL    = '┌'; // 250C
-const LINE_BL    = '└'; // 2514
-const LINE_RIGHT = '┤'; // 2524
-const LINE_LEFT  = '├'; // 251C
 
 function printList(caption, list, isPath = false) {
     if (!list.length) {
-        let msg = `${caption} <== EMPTY`;
-        console.log(msg.padStart(msg.length + 2, ' '));
+        tools.info(`${caption} EMPTY`);
         return;
     }
-    console.log(LINE_TL.padEnd(LINE_WIDTH, LINE_H) + LINE_TR);
-    console.log(`${LINE_V} ${caption}`.padEnd(LINE_WIDTH) + LINE_V);
-    console.log(LINE_LEFT.padEnd(LINE_WIDTH, LINE_H) + LINE_RIGHT);
-    list.forEach(item => console.log(`${LINE_V} ${isPath ? item.shortPath() : item}`.padEnd(LINE_WIDTH) + LINE_V));
-    console.log(LINE_BL.padEnd(LINE_WIDTH, LINE_H) + LINE_BR);
+
+    tools.info(caption);
+    list.forEach(item => console.log(`    ${isPath ? item.shortPath() : item}`));
 }
 
-module.exports = function (options, args) {
-    return function (done) {
+module.exports = function (options) {
 
-        if (!Array.isArray(options.cleaning)) {
-            options.cleaning = [options.cleaning];
-        }
+    if (!Array.isArray(config.cleaning)) {
+        config.cleaning = [config.cleaning];
+    }
+
+    return function (done) {
 
         let targets = [];
 
-        for (let index in options.cleaning) {
-            if (!options.cleaning.hasOwnProperty(index)) continue;
+        for (let index in config.cleaning) {
+            if (!config.cleaning.hasOwnProperty(index)) continue;
 
-            let itemOpts  = options.cleaning[index];
-            let cleanRoot = options.root.build;
+            let itemOpts  = config.cleaning[index];
+            let cleanRoot = config.root.build;
 
-            if (itemOpts.root && fs.existsSync(path.join(cleanRoot, itemOpts.root))) {
-                cleanRoot = path.join(cleanRoot, itemOpts.root);
+            if (itemOpts.root) {
+                if (fs.existsSync(path.join(cleanRoot, itemOpts.root))) {
+                    cleanRoot = path.join(cleanRoot, itemOpts.root);
+                } else {
+                    tools.warn(`Clean task [${index}][${cleanRoot}${itemOpts.root}]: Directory not found.`);
+                    continue;
+                }
             }
 
             if (!fs.existsSync(cleanRoot)) {
-                console.log(`Clean task [${index}]: Nothing to delete.`);
+                tools.warn(`Clean task [${index}]: Nothing to delete.`);
                 continue;
-                // done();
             }
 
             let originalExcludes = normalizePathExcludes(itemOpts.exclude, cleanRoot);
-            if (typeof args === 'object' && args.preview) {
-                printList(`Original excludes [${index}]:`, originalExcludes, true);
+            if (typeof options === 'object' && options.preview) {
+                printList(`Clean task [${index}]: Excludes `, originalExcludes, true);
             }
 
             let fsObjects = scanDir(cleanRoot);
             // printList('File system objects:', fsObjects, true);
 
-            for (let i = 0, len = fsObjects.length; i < len; i++) ;
-
             let tmp = fsObjects.filter(item => {
-                // if (12 > index || index > 15) return false;
                 // console.log('-----------');
                 // console.log(`item > (${index})`, item);
                 let keep = true;
@@ -161,15 +149,16 @@ module.exports = function (options, args) {
             // printList(`Clean directory [${index}]: ${cleanRoot}`, _targets, true);
         }
 
+        targets = targets.concat(tools.getTempDirectory());
 
         printList(`Clean directory [ALL]:`, targets, true);
 
-        if (typeof args === 'object' && args.preview) {
+        if (typeof options === 'object' && options.preview) {
             done();
         } else {
             // noinspection JSUnresolvedFunction
             del(targets).then(paths => {
-                console.warn(`Removed: ${paths.length} item${paths.length !== 1 ? 's' : ''}`);
+                tools.success(`Removed: ${paths.length} item${paths.length !== 1 ? 's' : ''}`);
                 done();
             });
         }
